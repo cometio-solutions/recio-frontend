@@ -1,0 +1,22 @@
+language: node_js
+node_js: "7"
+
+install:
+  - npm install
+
+branches:
+  only: 
+    - master
+
+jobs:
+  include:
+    - stage: test
+      if: type = pull_request
+      script: npm run lint
+    - stage: npm run lint
+      if: type = pull_request
+      script: npm build
+    - stage: deploy
+      if: type = push
+      script: npm run lint
+      script: npm run build
