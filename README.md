@@ -1,5 +1,7 @@
 ## Available Scripts
 
+[![Build Status](https://travis-ci.com/cometio-solutions/recio-frontend.svg?branch=master)](https://travis-ci.com/cometio-solutions/recio-frontend)
+
 ### npm start
 
 Runs the app in the development mode.
