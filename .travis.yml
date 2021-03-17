@@ -14,7 +14,7 @@ jobs:
     - stage: test
       if: type = pull_request
       script: npm run lint
-    - stage: npm run lint
+    - stage: build
       if: type = pull_request
       script: npm build
     - stage: deploy
