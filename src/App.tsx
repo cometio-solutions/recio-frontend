@@ -1,14 +1,12 @@
-import React from 'react';
+import React, { ReactElement } from 'react';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
 import './App.css';
 import Login from './components/Login/Login';
-import {
-    BrowserRouter as Router, Route,
-  } from 'react-router-dom';
 import Register from './components/Register/Register';
-  
+
 interface AppProps {}
 
-function App({}: AppProps) {
+function App({}: AppProps): ReactElement {
     return (
         <div className="App">
             <Router>

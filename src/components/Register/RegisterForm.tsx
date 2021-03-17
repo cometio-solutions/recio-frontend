@@ -3,19 +3,19 @@ import {
     AlertIcon,
     Button,
     Center,
+    Flex,
     FormControl,
-    Link,
     Stack,
-    VStack,
 } from '@chakra-ui/react';
 import React, { ReactElement, useState } from 'react';
 import { useHistory } from 'react-router';
+import { register } from '../../services/api';
 import FormInput from '../utils/FormInput';
-import { login } from '../../services/api';
 
-export default function LoginForm(): ReactElement {
+export default function RegisterForm(): ReactElement {
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
+    const [confirmPassword, setConfirmPassword] = useState<string>('');
     const [error, setError] = useState<string>('');
     const history = useHistory();
 
@@ -23,7 +23,11 @@ export default function LoginForm(): ReactElement {
         <form
             onSubmit={(e) => {
                 e.preventDefault();
-                login(email, password).catch((error) => setError(error));
+                if (password !== confirmPassword) {
+                    setError('Błąd! Podane hasła nie są identyczne!');
+                    return;
+                }
+                register(email, password).catch((error) => setError(error));
             }}
         >
             <Stack align="center" spacing="3" mt="10">
@@ -41,17 +45,14 @@ export default function LoginForm(): ReactElement {
                         onChange={setPassword}
                     />
                 </FormControl>
+                <FormControl w="80%" bg="#F8F8F8">
+                    <FormInput
+                        placeholder="Potwierdź hasło"
+                        type="password"
+                        onChange={setConfirmPassword}
+                    />
+                </FormControl>
             </Stack>
-            <VStack align="left" mt="5" spacing="3">
-                <Link
-                    align="left"
-                    ml="10%"
-                    color="blue.500"
-                    onClick={() => history.push('register')}
-                >
-                    Utwórz nowe konto
-                </Link>
-            </VStack>
             <Center mt="3">
                 {error !== '' && (
                     <Alert w="80%" status="error">
@@ -61,16 +62,29 @@ export default function LoginForm(): ReactElement {
                 )}
             </Center>
             <Center mt="10">
-                <Button
-                    type="submit"
-                    colorScheme="blue"
-                    size="lg"
-                    fontSize="md"
-                    m="auto"
-                    w="40%"
-                >
-                    Zaloguj się
-                </Button>
+                <Flex w="90%">
+                    <Button
+                        type="submit"
+                        colorScheme="red"
+                        onClick={() => history.push('/')}
+                        size="lg"
+                        fontSize="md"
+                        m="auto"
+                        w="40%"
+                    >
+                        Powrót
+                    </Button>
+                    <Button
+                        type="submit"
+                        colorScheme="blue"
+                        size="lg"
+                        fontSize="md"
+                        m="auto"
+                        w="40%"
+                    >
+                        Utwórz konto
+                    </Button>
+                </Flex>
             </Center>
         </form>
     );

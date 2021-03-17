@@ -16,13 +16,13 @@ export default function Login(): ReactElement {
                 p="6"
                 rounded="md"
                 w="40%"
-                h="400"
+                minH="400"
                 textAlign="center"
             >
                 <Heading color="blue.500" textAlign="center">
                     RecIO
                 </Heading>
-                <LoginForm/>
+                <LoginForm />
             </Box>
         </Center>
     );
