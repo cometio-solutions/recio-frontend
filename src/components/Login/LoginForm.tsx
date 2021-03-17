@@ -8,10 +8,12 @@ import {
     VStack,
 } from '@chakra-ui/react';
 import React, { ReactElement, useState } from 'react';
+import { useHistory } from 'react-router';
 
 export default function LoginForm(): ReactElement {
     const [email, setEmail] = useState<String>("");
     const [password, setPassword] = useState<String>("");
+    const history = useHistory();
 
     return (
         <form
@@ -41,7 +43,7 @@ export default function LoginForm(): ReactElement {
                 </FormControl>
             </Stack>
             <VStack align="left" mt="5" spacing="3">
-                <Link align="left" ml="10%" color="blue.500" href="#">
+                <Link align="left" ml="10%" color="blue.500" onClick={() => history.push("register")}>
                     Don't have account ? Sing up
                 </Link>
             </VStack>
