@@ -6,7 +6,7 @@ install:
   - npm install
 
 branches:
-  only: 
+  only:
     - master
 
 jobs:
@@ -16,7 +16,7 @@ jobs:
       script: npm run lint
     - stage: build
       if: type = pull_request
-      script: npm build
+      script: npm run build
     - stage: deploy
       if: type = push
       script: npm run lint
