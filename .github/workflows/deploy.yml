@@ -1,0 +1,17 @@
+name: deploy on push
+on:
+  push:
+    branches:
+      - master
+jobs:
+  build:
+    name: Deploy
+    runs-on: ubuntu-latest
+    steps:
+    - name: Deploying backend
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.SSH_KEY }}
+        script: cd /root/recio-frontend && git pull && npm install && npm run build && docker-compose up -d
