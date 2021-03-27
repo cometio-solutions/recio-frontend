@@ -61,6 +61,9 @@ export default function LoginForm(): ReactElement {
                 )}
             </Center>
             <Center mt="10">
+                <Link color="pink.700" onClick={() => history.push('main')}>
+                    Main
+                </Link>
                 <Button
                     type="submit"
                     colorScheme="blue"
