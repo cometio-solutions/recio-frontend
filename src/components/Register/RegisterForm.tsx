@@ -3,19 +3,24 @@ import {
     AlertIcon,
     Button,
     Center,
+    Checkbox,
     Flex,
     FormControl,
+    Radio,
     Stack,
 } from '@chakra-ui/react';
 import React, { ReactElement, useState } from 'react';
-import { useHistory } from 'react-router';
-import { register } from '../../services/api';
+
 import FormInput from '../utils/FormInput';
+import { register } from '../../services/api';
+import { useHistory } from 'react-router';
 
 export default function RegisterForm(): ReactElement {
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const [confirmPassword, setConfirmPassword] = useState<string>('');
+    const [name, setName] = useState<string>('');
+    const [editorRequest, setEditorRequest] = useState<boolean>(false);
     const [error, setError] = useState<string>('');
     const history = useHistory();
 
@@ -27,7 +32,9 @@ export default function RegisterForm(): ReactElement {
                     setError('Błąd! Podane hasła nie są identyczne!');
                     return;
                 }
-                register(email, password).catch((error) => setError(error));
+                register(email, name, password, editorRequest)
+                    .then((data) => history.push('/login'))
+                    .catch((error) => setError(error));
             }}
         >
             <Stack align="center" spacing="3" mt="10">
@@ -36,6 +43,13 @@ export default function RegisterForm(): ReactElement {
                         placeholder="Email"
                         type="email"
                         onChange={setEmail}
+                    />
+                </FormControl>
+                <FormControl w="80%" bg="#F8F8F8">
+                    <FormInput
+                        placeholder="Imię i nazwisko"
+                        type="text"
+                        onChange={setName}
                     />
                 </FormControl>
                 <FormControl w="80%" bg="#F8F8F8">
@@ -53,6 +67,16 @@ export default function RegisterForm(): ReactElement {
                     />
                 </FormControl>
             </Stack>
+            <Stack textAlign="left">
+                <Checkbox
+                    mt="3"
+                    ml="10%"
+                    isChecked={editorRequest}
+                    onChange={(e) => setEditorRequest(e.target.checked)}
+                >
+                    Uprawnienia do edycji
+                </Checkbox>
+            </Stack>
             <Center mt="3">
                 {error !== '' && (
                     <Alert w="80%" status="error">
@@ -66,7 +90,7 @@ export default function RegisterForm(): ReactElement {
                     <Button
                         type="submit"
                         colorScheme="red"
-                        onClick={() => history.push('/')}
+                        onClick={() => history.push('/login')}
                         size="lg"
                         fontSize="md"
                         m="auto"
