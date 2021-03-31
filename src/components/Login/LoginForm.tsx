@@ -9,9 +9,10 @@ import {
     VStack,
 } from '@chakra-ui/react';
 import React, { ReactElement, useState } from 'react';
-import { useHistory } from 'react-router';
+
 import FormInput from '../utils/FormInput';
 import { login } from '../../services/api';
+import { useHistory } from 'react-router';
 
 export default function LoginForm(): ReactElement {
     const [email, setEmail] = useState<string>('');
@@ -23,7 +24,14 @@ export default function LoginForm(): ReactElement {
         <form
             onSubmit={(e) => {
                 e.preventDefault();
-                login(email, password).catch((error) => setError(error));
+                login(email, password)
+                    .then(({ token, role }) => {
+                        sessionStorage.setItem('token', token);
+                        sessionStorage.setItem('role', role);
+                        setError('');
+                        history.push('');
+                    })
+                    .catch((error) => setError(error));
             }}
         >
             <Stack align="center" spacing="3" mt="10">
@@ -61,9 +69,6 @@ export default function LoginForm(): ReactElement {
                 )}
             </Center>
             <Center mt="10">
-                <Link color="pink.700" onClick={() => history.push('main')}>
-                    Main
-                </Link>
                 <Button
                     type="submit"
                     colorScheme="blue"
