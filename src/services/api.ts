@@ -9,13 +9,26 @@ const emailAlreadyExistError = 'Podany email jest już zajęty !';
 
 interface UserData {
     token: string;
-    role: string;
+    role: 'user' | 'editor' | 'admin';
+}
+
+export interface EditorRequest {
+    name: string;
+    email: string;
 }
 
 const config = {
     headers: {
         accept: 'application/json',
         'Content-Type': 'application/json',
+    },
+};
+
+const authConfig = {
+    ...config,
+    headers: {
+        ...config.headers,
+        token: sessionStorage.getItem('token'),
     },
 };
 
@@ -67,4 +80,37 @@ export const register = (
                 }
             });
     });
+};
+
+export const getEditorRequests = (): Promise<EditorRequest[]> => {
+    return new Promise((resolve, reject) =>
+        axios
+            .get(API_URL + '/user/editorRequests', authConfig)
+            .then((res) => resolve(res.data))
+            .catch((err) => {
+                console.error(err);
+                reject(dbConnectionError);
+            }),
+    );
+};
+
+export const settleEditorRequests = (
+    name: string,
+    email: string,
+    approved: boolean,
+): Promise<EditorRequest[]> => {
+    const approval = approved ? 'accept' : 'reject';
+    return new Promise((resolve, reject) =>
+        axios
+            .post(
+                API_URL + '/user/editorRequests',
+                { name, email, approval },
+                authConfig,
+            )
+            .then((res) => resolve(res.data))
+            .catch((err) => {
+                console.error(err);
+                reject(dbConnectionError);
+            }),
+    );
 };
