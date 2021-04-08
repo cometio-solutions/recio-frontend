@@ -1,10 +1,9 @@
+import Admin from '../Admin/Admin';
 import { Flex } from '@chakra-ui/react';
-import Footer from '../utils/Footer';
 import Index from '../Index/Index';
 import NavBar from '../utils/NavBar';
 import React from 'react';
 import { Route } from 'react-router';
-import Admin from '../Admin/Admin';
 
 export default function Main() {
     return (
@@ -20,7 +19,6 @@ export default function Main() {
                 <Route exact path="/" component={Index} />
                 <Route exact path="/admin" component={Admin} />
             </Flex>
-            <Footer />
         </Flex>
     );
 }

@@ -8,13 +8,12 @@ export default function NavBar(): ReactElement {
     return (
         <Center bg="gray.50" as="header">
             <Flex py="3" maxW="container.lg" w="full" alignItems="center">
-                <Heading as="h1" size="md" color="blue.600">
+                <Heading as="h1" size="md" color="blue.600" cursor="default">
                     recIO
                 </Heading>
                 <Stack direction="row" ml="10" flexGrow={1}>
                     <NavItem href="/" text="Strona główna" active />
-                    <NavItem href="/" text="Twardy" />
-                    <NavItem href="/" text="Działa Oracle?" />
+                    <NavItem href="/recruitment" text="Lista rekrutacji" />
                     <NavItem
                         href="/login"
                         onClick={() => {
