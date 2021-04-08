@@ -2,6 +2,7 @@ import {
     Button,
     ButtonGroup,
     Flex,
+    Heading,
     Spinner,
     Table,
     TableCaption,
@@ -11,12 +12,12 @@ import {
     Thead,
     Tr,
 } from '@chakra-ui/react';
-import React, { useEffect, useState } from 'react';
 import {
-    getEditorRequests,
     EditorRequest,
+    getEditorRequests,
     settleEditorRequests,
 } from '../../services/api';
+import React, { useEffect, useState } from 'react';
 
 export default function Admin() {
     const [isLoading, setIsLoading] = useState(false);
@@ -54,41 +55,47 @@ export default function Admin() {
         >
             {isLoading && <Spinner size="lg" color="blue" mt="4" />}
             {!isLoading && (
-                <Table>
-                    <TableCaption>Lista wniosków o konto edytora</TableCaption>
-                    <Thead>
-                        <Tr>
-                            <Th>Lp</Th>
-                            <Th>Nazwa</Th>
-                            <Th>Adres e-mail</Th>
-                            <Th></Th>
-                        </Tr>
-                    </Thead>
-                    <Tbody>
-                        {requests.map(({ name, email }, i) => (
-                            <Tr key={email}>
-                                <Td>{i + 1}</Td>
-                                <Td>{name}</Td>
-                                <Td>{email}</Td>
-                                <Td>
-                                    <ButtonGroup>
-                                        <Button
-                                            colorScheme="blue"
-                                            onClick={handleAction(i, true)}
-                                        >
-                                            Zaakceptuj
-                                        </Button>
-                                        <Button
-                                            onClick={handleAction(i, false)}
-                                        >
-                                            Odrzuć
-                                        </Button>
-                                    </ButtonGroup>
-                                </Td>
+                <>
+                    <Heading textAlign="center" size="md" mt="5">
+                        Lista wniosków o konto edytora
+                    </Heading>
+                    <Table colorScheme="blue" mt="5">
+                        <Thead>
+                            <Tr>
+                                <Th>L.p.</Th>
+                                <Th>Imię i nazwisko</Th>
+                                <Th>Adres e-mail</Th>
+                                <Th></Th>
                             </Tr>
-                        ))}
-                    </Tbody>
-                </Table>
+                        </Thead>
+                        <Tbody>
+                            {requests.map(({ name, email }, i) => (
+                                <Tr key={email}>
+                                    <Td>{i + 1}</Td>
+                                    <Td>{name}</Td>
+                                    <Td>{email}</Td>
+                                    <Td>
+                                        <ButtonGroup>
+                                            <Button
+                                                colorScheme="blue"
+                                                onClick={handleAction(i, true)}
+                                            >
+                                                Zaakceptuj
+                                            </Button>
+                                            <Button
+                                                variant="outline"
+                                                bg="white"
+                                                onClick={handleAction(i, false)}
+                                            >
+                                                Odrzuć
+                                            </Button>
+                                        </ButtonGroup>
+                                    </Td>
+                                </Tr>
+                            ))}
+                        </Tbody>
+                    </Table>
+                </>
             )}
         </Flex>
     );

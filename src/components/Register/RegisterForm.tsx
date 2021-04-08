@@ -32,7 +32,7 @@ export default function RegisterForm(): ReactElement {
                     setError('Błąd! Podane hasła nie są identyczne!');
                     return;
                 }
-                register(email, name, password, editorRequest)
+                register(email, name.replace(' ', ''), password, editorRequest)
                     .then((data) => history.push('/login'))
                     .catch((error) => setError(error));
             }}

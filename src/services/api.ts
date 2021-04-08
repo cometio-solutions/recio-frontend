@@ -12,6 +12,13 @@ interface UserData {
     role: 'user' | 'editor' | 'admin';
 }
 
+export interface Enrolment {
+    id: number;
+    endData: Date;
+    cycleNumber: number;
+    slotLimit: number;
+}
+
 export interface EditorRequest {
     name: string;
     email: string;
