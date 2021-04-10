@@ -1,46 +1,20 @@
-import {
-    Heading,
-    Table,
-    TableCaption,
-    Tbody,
-    Td,
-    Th,
-    Thead,
-    Tr,
-} from '@chakra-ui/react';
-import React, { ReactElement } from 'react';
+import { Heading, Table, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/react';
+import React, { ReactElement, useEffect, useState } from 'react';
+import { Recruitment, formatRecruitmentBody, getRecruitment } from '../../services/api';
 
 import { Flex } from '@chakra-ui/react';
 import NavBar from '../utils/NavBar';
 
-const recruitmentList = [
-    {
-        major: 'Informatyka',
-        faculty: 'WIET',
-        degree: 'Magisterskie',
-        mode: 'Stacjonarne',
-        year: '2021',
-        pointLimit: '-',
-        endData: '2021-09-01',
-        slotLimit: 130,
-        candidatesNumber: 30,
-        isActive: true,
-    },
-    {
-        major: 'Elektronika',
-        faculty: 'WIET',
-        degree: 'Inżynierskie',
-        mode: 'Stacjonarne',
-        year: '2018',
-        pointLimit: '900/1000',
-        endData: '2018-09-01',
-        slotLimit: 200,
-        candidatesNumber: 300,
-        isActive: false,
-    },
-];
-
 export default function RecruitmentList(): ReactElement {
+
+    const [recruitmentList, setRecruitmentList] = useState<Recruitment[]>([]);
+    useEffect(() => {
+        getRecruitment().then((data) => {
+            console.log(data)
+            setRecruitmentList(data.map(ele => formatRecruitmentBody(ele)))
+        });
+    }, []);
+
     return (
         <Flex as="main" direction="column" minH="100vh" bg="gray.100">
             <NavBar />
@@ -62,44 +36,39 @@ export default function RecruitmentList(): ReactElement {
                             <Th>Wydział</Th>
                             <Th>Stopień</Th>
                             <Th>Tryb</Th>
-                            <Th>Rok</Th>
                             <Th>Próg Punktowy</Th>
                             <Th>Data Zakończenia</Th>
                             <Th>Limit Miejsc</Th>
-                            <Th>Liczba Kandydatów</Th>
                         </Tr>
                     </Thead>
                     <Tbody>
                         {recruitmentList.map(
                             (
                                 {
-                                    major,
+                                    major_name,
                                     faculty,
                                     degree,
-                                    mode,
-                                    year,
-                                    pointLimit,
-                                    endData,
-                                    slotLimit,
-                                    candidatesNumber,
-                                    isActive,
+                                    major_mode,
+                                    point_limit,
+                                    end_date,
+                                    slot_limit,
+                                    is_active,
                                 },
                                 idx,
                             ) => (
                                 <Tr
                                     cursor="pointer"
-                                    bg={isActive ? 'gray.200' : ''}
+                                    bg={is_active ? 'gray.200' : ''}
+                                    key={idx}
                                 >
                                     <Td>{idx + 1}</Td>
-                                    <Td>{major}</Td>
+                                    <Td>{major_name}</Td>
                                     <Td>{faculty}</Td>
                                     <Td>{degree}</Td>
-                                    <Td>{mode}</Td>
-                                    <Td>{year}</Td>
-                                    <Td>{pointLimit}</Td>
-                                    <Td>{endData}</Td>
-                                    <Td>{slotLimit}</Td>
-                                    <Td>{candidatesNumber}</Td>
+                                    <Td>{major_mode}</Td>
+                                    <Td>{point_limit}</Td>
+                                    <Td>{end_date}</Td>
+                                    <Td>{slot_limit}</Td>
                                 </Tr>
                             ),
                         )}
