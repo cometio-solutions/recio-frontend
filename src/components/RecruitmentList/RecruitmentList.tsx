@@ -1,17 +1,20 @@
 import { Heading, Table, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/react';
 import React, { ReactElement, useEffect, useState } from 'react';
-import { Recruitment, formatRecruitmentBody, getRecruitment } from '../../services/api';
+import {
+    Recruitment,
+    formatRecruitmentBody,
+    getRecruitment,
+} from '../../services/api';
 
 import { Flex } from '@chakra-ui/react';
 import NavBar from '../utils/NavBar';
 
 export default function RecruitmentList(): ReactElement {
-
     const [recruitmentList, setRecruitmentList] = useState<Recruitment[]>([]);
     useEffect(() => {
         getRecruitment().then((data) => {
-            console.log(data)
-            setRecruitmentList(data.map(ele => formatRecruitmentBody(ele)))
+            console.log(data);
+            setRecruitmentList(data.map((ele) => formatRecruitmentBody(ele)));
         });
     }, []);
 

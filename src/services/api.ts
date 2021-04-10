@@ -9,22 +9,22 @@ interface UserData {
 }
 
 const formatMajorMode = (major_mode: string) => {
-    if(major_mode === "Mode.FULL_TIME") return "Stacjonarne";
-    return "Niestacjonarne";
-}
+    if (major_mode === 'Mode.FULL_TIME') return 'Stacjonarne';
+    return 'Niestacjonarne';
+};
 
 const formatDegree = (degree: string) => {
-    if(degree === "Degree.BACHELOR") return "Inżnierskie";
-    return "Magisterskie";
-}
+    if (degree === 'Degree.BACHELOR') return 'Inżnierskie';
+    return 'Magisterskie';
+};
 
 export const formatRecruitmentBody = (data: Recruitment) => {
     return {
         ...data,
         major_mode: formatMajorMode(data.major_mode),
-        degree: formatDegree(data.degree)
-    }
-}
+        degree: formatDegree(data.degree),
+    };
+};
 
 export interface Recruitment {
     id: number;
@@ -69,7 +69,7 @@ export const login = (email: string, password: string): Promise<UserData> => {
             })
             .catch((err) => {
                 if (err.response) {
-                    reject(err.response.data.error)
+                    reject(err.response.data.error);
                 } else {
                     reject(dbConnectionError);
                 }
@@ -96,7 +96,7 @@ export const register = (
             .catch((err) => {
                 console.log(err);
                 if (err.response) {
-                    reject(err.response.data.error)
+                    reject(err.response.data.error);
                 } else {
                     reject(dbConnectionError);
                 }
@@ -142,7 +142,7 @@ export const getRecruitment = (): Promise<Recruitment[]> => {
         axios
             .get(API_URL + '/recruitment', authConfig)
             .then((res) => {
-                resolve(res.data.data)
+                resolve(res.data.data);
             })
             .catch((err) => {
                 console.error(err);
