@@ -5,6 +5,7 @@ import React from 'react';
 import type { ReactElement } from 'react';
 
 export default function NavBar(): ReactElement {
+    const isAdmin = sessionStorage.getItem('role') === 'admin';
     return (
         <Center bg="gray.50" as="header">
             <Flex py="3" maxW="container.lg" w="full" alignItems="center">
@@ -14,6 +15,9 @@ export default function NavBar(): ReactElement {
                 <Stack direction="row" ml="10" flexGrow={1}>
                     <NavItem href="/" text="Strona główna" active />
                     <NavItem href="/recruitment" text="Lista rekrutacji" />
+                    {isAdmin && (
+                        <NavItem href="/admin" text="Panel administratora" />
+                    )}
                     <NavItem
                         href="/login"
                         onClick={() => {
