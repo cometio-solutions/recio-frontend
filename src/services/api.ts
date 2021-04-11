@@ -1,22 +1,42 @@
 import axios from 'axios';
 
 const API_URL = 'http://localhost:5000';
-
-const invalidLoginDataError = 'Wprowadzono nieporawny email lub hasło !';
 const dbConnectionError = 'Błąd połączenia z bazą danych !';
-const incorrectEmailFormatError = 'Niepoprawny adres email !';
-const emailAlreadyExistError = 'Podany email jest już zajęty !';
 
 interface UserData {
     token: string;
     role: 'user' | 'editor' | 'admin';
 }
 
-export interface Enrolment {
+const formatMajorMode = (major_mode: string) => {
+    if (major_mode === 'Mode.FULL_TIME') return 'Stacjonarne';
+    return 'Niestacjonarne';
+};
+
+const formatDegree = (degree: string) => {
+    if (degree === 'Degree.BACHELOR') return 'Inżnierskie';
+    return 'Magisterskie';
+};
+
+export const formatRecruitmentBody = (data: Recruitment) => {
+    return {
+        ...data,
+        major_mode: formatMajorMode(data.major_mode),
+        degree: formatDegree(data.degree),
+    };
+};
+
+export interface Recruitment {
     id: number;
-    endData: Date;
-    cycleNumber: number;
-    slotLimit: number;
+    cycle_number: number;
+    degree: string;
+    end_date: string;
+    faculty: string;
+    is_active: boolean;
+    major_mode: string;
+    major_name: string;
+    point_limit: number;
+    slot_limit: number;
 }
 
 export interface EditorRequest {
@@ -48,9 +68,8 @@ export const login = (email: string, password: string): Promise<UserData> => {
                 resolve(res.data);
             })
             .catch((err) => {
-                console.log(err);
                 if (err.response) {
-                    reject(invalidLoginDataError);
+                    reject(err.response.data.error);
                 } else {
                     reject(dbConnectionError);
                 }
@@ -77,11 +96,7 @@ export const register = (
             .catch((err) => {
                 console.log(err);
                 if (err.response) {
-                    if (err.response.status == 400) {
-                        reject(incorrectEmailFormatError);
-                    } else {
-                        reject(emailAlreadyExistError);
-                    }
+                    reject(err.response.data.error);
                 } else {
                     reject(dbConnectionError);
                 }
@@ -96,7 +111,7 @@ export const getEditorRequests = (): Promise<EditorRequest[]> => {
             .then((res) => resolve(res.data))
             .catch((err) => {
                 console.error(err);
-                reject(dbConnectionError);
+                reject(err.response.data.error);
             }),
     );
 };
@@ -117,7 +132,21 @@ export const settleEditorRequests = (
             .then((res) => resolve(res.data))
             .catch((err) => {
                 console.error(err);
-                reject(dbConnectionError);
+                reject(err.response.data.error);
+            }),
+    );
+};
+
+export const getRecruitment = (): Promise<Recruitment[]> => {
+    return new Promise((resolve, reject) =>
+        axios
+            .get(API_URL + '/recruitment', authConfig)
+            .then((res) => {
+                resolve(res.data.data);
+            })
+            .catch((err) => {
+                console.error(err);
+                reject(err.response.data.error);
             }),
     );
 };
