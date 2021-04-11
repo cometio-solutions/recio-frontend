@@ -51,13 +51,15 @@ const config = {
     },
 };
 
-const authConfig = {
-    ...config,
-    headers: {
-        ...config.headers,
-        token: sessionStorage.getItem('token'),
-    },
-};
+function authConfig() {
+    return {
+        ...config,
+        headers: {
+            ...config.headers,
+            token: sessionStorage.getItem('token'),
+        },
+    };
+}
 
 export const login = (email: string, password: string): Promise<UserData> => {
     return new Promise((resolve, reject) => {
@@ -107,7 +109,7 @@ export const register = (
 export const getEditorRequests = (): Promise<EditorRequest[]> => {
     return new Promise((resolve, reject) =>
         axios
-            .get(API_URL + '/user/editorRequests', authConfig)
+            .get(API_URL + '/user/editorRequests', authConfig())
             .then((res) => resolve(res.data))
             .catch((err) => {
                 console.error(err);
@@ -127,7 +129,7 @@ export const settleEditorRequests = (
             .post(
                 API_URL + '/user/editorRequests',
                 { name, email, approval },
-                authConfig,
+                authConfig(),
             )
             .then((res) => resolve(res.data))
             .catch((err) => {
@@ -140,12 +142,26 @@ export const settleEditorRequests = (
 export const getRecruitment = (): Promise<Recruitment[]> => {
     return new Promise((resolve, reject) =>
         axios
-            .get(API_URL + '/recruitment', authConfig)
+            .get(API_URL + '/recruitment', authConfig())
             .then((res) => {
                 resolve(res.data.data);
             })
             .catch((err) => {
                 console.error(err);
+                reject(err.response.data.error);
+            }),
+    );
+};
+
+export const importFile = (element: Element): Promise<string> => {
+    const formData = new FormData();
+    formData.append('data', (element as any).files[0]);
+    const headers = { ...authConfig(), 'Content-Type': 'multipart/form-data' };
+    return new Promise((resolve, reject) =>
+        axios
+            .post(API_URL + '/file', formData, headers)
+            .then((res) => resolve(res.data.message))
+            .catch((err) => {
                 reject(err.response.data.error);
             }),
     );
