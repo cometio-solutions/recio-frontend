@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:5000';
+const API_URL = 'http://134.122.71.130:5000';
 const dbConnectionError = 'Błąd połączenia z bazą danych !';
 
 interface UserData {
