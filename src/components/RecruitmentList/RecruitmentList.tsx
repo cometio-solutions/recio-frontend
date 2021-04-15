@@ -6,21 +6,34 @@ import {
     getRecruitment,
 } from '../../services/api';
 
+import Filter from './Filter';
 import { Flex } from '@chakra-ui/react';
 import NavBar from '../utils/NavBar';
 
 export default function RecruitmentList(): ReactElement {
     const [recruitmentList, setRecruitmentList] = useState<Recruitment[]>([]);
+    const [filteredRecruitmentList, setFilteredRecruitmentList] = useState<
+        Recruitment[]
+    >([]);
+
     useEffect(() => {
         getRecruitment().then((data) => {
-            console.log(data);
-            setRecruitmentList(data.map((ele) => formatRecruitmentBody(ele)));
+            setRecruitmentList(
+                data.map((recruitment) => formatRecruitmentBody(recruitment)),
+            );
+            setFilteredRecruitmentList(
+                data.map((recruitment) => formatRecruitmentBody(recruitment)),
+            );
         });
     }, []);
 
     return (
         <Flex as="main" direction="column" minH="100vh" bg="gray.100">
             <NavBar />
+            <Filter
+                setList={setFilteredRecruitmentList}
+                list={recruitmentList}
+            />
             <Heading textAlign="center" size="md" mt="5">
                 Lista Rekrutacji
             </Heading>
@@ -45,7 +58,7 @@ export default function RecruitmentList(): ReactElement {
                         </Tr>
                     </Thead>
                     <Tbody>
-                        {recruitmentList.map(
+                        {filteredRecruitmentList.map(
                             (
                                 {
                                     major_name,
