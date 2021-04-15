@@ -3,6 +3,7 @@ import { Flex } from '@chakra-ui/react';
 import Index from '../Index/Index';
 import NavBar from '../utils/NavBar';
 import React from 'react';
+import RecruitmentSummary from '../RecruitmentSummary/RecruitmentSummary';
 import { Route } from 'react-router';
 
 export default function Main() {
@@ -18,6 +19,7 @@ export default function Main() {
             >
                 <Route exact path="/" component={Index} />
                 <Route exact path="/admin" component={Admin} />
+                <Route path="/summary" component={RecruitmentSummary} />
             </Flex>
         </Flex>
     );
