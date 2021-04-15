@@ -64,7 +64,7 @@ const cyclesData = [
         name: 3,
         value: 800,
     },
-]
+];
 
 export default function RecruitmentSummary(): ReactElement {
     return (
@@ -111,7 +111,7 @@ export default function RecruitmentSummary(): ReactElement {
                 </Stack>
             </HStack>
             <HStack>
-            <Stack>
+                <Stack>
                     <Heading textAlign="center" size="sm" mt="5">
                         Próg punktowy w poszczególnych cyklach rekrutacji
                     </Heading>
