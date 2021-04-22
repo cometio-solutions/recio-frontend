@@ -32,7 +32,7 @@ export default function Filter({ setList, list }: FilterProps): ReactElement {
 
     useEffect(() => {
         getYears().then((years) => {
-            getMajors().then((majors) => setFilterData({years, majors}));
+            getMajors().then((majors) => setFilterData({ years, majors }));
         });
     }, []);
 
@@ -53,8 +53,11 @@ export default function Filter({ setList, list }: FilterProps): ReactElement {
                 })
                 .filter((recruitment) => {
                     if (major === '') return true;
-                    const [name, faculty] = major.split(",");
-                    return recruitment.major_name === name && recruitment.faculty === faculty;
+                    const [name, faculty] = major.split(',');
+                    return (
+                        recruitment.major_name === name &&
+                        recruitment.faculty === faculty
+                    );
                 });
         };
         setList(filterList());
@@ -90,7 +93,10 @@ export default function Filter({ setList, list }: FilterProps): ReactElement {
                 onChange={(e) => setMajor(e.target.value)}
             >
                 {filterData.majors.map((major) => (
-                    <option key={major.id} value={`${major.name},${major.faculty}`}>
+                    <option
+                        key={major.id}
+                        value={`${major.name},${major.faculty}`}
+                    >
                         {`${major.name},${major.faculty}`}
                     </option>
                 ))}

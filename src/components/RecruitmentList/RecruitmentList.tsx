@@ -74,7 +74,7 @@ export default function RecruitmentList(): ReactElement {
                                     <Td>{faculty}</Td>
                                     <Td>{degree}</Td>
                                     <Td>{major_mode}</Td>
-                                    <Td>{point_limit || "-"}</Td>
+                                    <Td>{point_limit || '-'}</Td>
                                     <Td>{end_date}</Td>
                                     <Td>{slot_limit}</Td>
                                 </Tr>

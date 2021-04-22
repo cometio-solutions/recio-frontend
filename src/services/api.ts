@@ -22,11 +22,11 @@ export interface Recruitment {
 }
 
 export interface Major {
-    id: number,
-    faculty: string,
-    mode: string,
-    name: string,
-    degree: string
+    id: number;
+    faculty: string;
+    mode: string;
+    name: string;
+    degree: string;
 }
 
 export interface EditorRequest {
@@ -184,4 +184,3 @@ export const getMajors = (): Promise<Major[]> => {
             }),
     );
 };
-
