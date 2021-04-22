@@ -1,10 +1,6 @@
 import { Heading, Table, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/react';
 import React, { ReactElement, useEffect, useState } from 'react';
-import {
-    Recruitment,
-    formatRecruitmentBody,
-    getRecruitment,
-} from '../../services/api';
+import { Recruitment, getRecruitment } from '../../services/api';
 
 import Filter from './Filter';
 import { Flex } from '@chakra-ui/react';
@@ -18,12 +14,8 @@ export default function RecruitmentList(): ReactElement {
 
     useEffect(() => {
         getRecruitment().then((data) => {
-            setRecruitmentList(
-                data.map((recruitment) => formatRecruitmentBody(recruitment)),
-            );
-            setFilteredRecruitmentList(
-                data.map((recruitment) => formatRecruitmentBody(recruitment)),
-            );
+            setRecruitmentList(data);
+            setFilteredRecruitmentList(data);
         });
     }, []);
 
@@ -82,7 +74,7 @@ export default function RecruitmentList(): ReactElement {
                                     <Td>{faculty}</Td>
                                     <Td>{degree}</Td>
                                     <Td>{major_mode}</Td>
-                                    <Td>{point_limit}</Td>
+                                    <Td>{point_limit || "-"}</Td>
                                     <Td>{end_date}</Td>
                                     <Td>{slot_limit}</Td>
                                 </Tr>

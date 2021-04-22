@@ -1,14 +1,13 @@
 import {
-    Checkbox,
     HStack,
     Input,
     InputGroup,
     InputLeftElement,
     Select,
 } from '@chakra-ui/react';
+import { Major, Recruitment, getMajors, getYears } from '../../services/api';
 import React, { ReactElement, useEffect, useState } from 'react';
 
-import type { Recruitment } from 'src/services/api';
 import { SearchIcon } from '@chakra-ui/icons';
 
 interface FilterProps {
@@ -16,11 +15,26 @@ interface FilterProps {
     list: Recruitment[];
 }
 
+interface FilterData {
+    years: number[];
+    majors: Major[];
+}
+
 export default function Filter({ setList, list }: FilterProps): ReactElement {
+    const [filterData, setFilterData] = useState<FilterData>({
+        years: [],
+        majors: [],
+    });
     const [status, setStatus] = useState<string>('');
     const [searchInput, setSearchInput] = useState<string>('');
     const [year, setYear] = useState<string>('');
-    const [majorName, setMajorName] = useState<string>('');
+    const [major, setMajor] = useState<string>('');
+
+    useEffect(() => {
+        getYears().then((years) => {
+            getMajors().then((majors) => setFilterData({years, majors}));
+        });
+    }, []);
 
     useEffect(() => {
         const filterList = (): Recruitment[] => {
@@ -33,10 +47,18 @@ export default function Filter({ setList, list }: FilterProps): ReactElement {
                     recruitment.major_name
                         .toLowerCase()
                         .includes(searchInput.toLowerCase()),
-                );
+                )
+                .filter((recruitment) => {
+                    return recruitment.end_date.includes(year);
+                })
+                .filter((recruitment) => {
+                    if (major === '') return true;
+                    const [name, faculty] = major.split(",");
+                    return recruitment.major_name === name && recruitment.faculty === faculty;
+                });
         };
         setList(filterList());
-    }, [status, year, majorName, searchInput]);
+    }, [status, year, major, searchInput]);
 
     return (
         <HStack
@@ -63,13 +85,15 @@ export default function Filter({ setList, list }: FilterProps): ReactElement {
                 w="20%"
                 color="blue.500"
                 bg="gray.50"
-                placeholder="Kierunek"
+                placeholder="Kierunek, Wydział"
                 size="sm"
-                onChange={(e) => console.log(e.target.value)}
+                onChange={(e) => setMajor(e.target.value)}
             >
-                <option value="option1">Option 1</option>
-                <option value="option2">Option 2</option>
-                <option value="option3">Option 3</option>
+                {filterData.majors.map((major) => (
+                    <option key={major.id} value={`${major.name},${major.faculty}`}>
+                        {`${major.name},${major.faculty}`}
+                    </option>
+                ))}
             </Select>
             <Select
                 w="20%"
@@ -77,7 +101,14 @@ export default function Filter({ setList, list }: FilterProps): ReactElement {
                 bg="gray.50"
                 placeholder="Rok"
                 size="sm"
-            />
+                onChange={(e) => setYear(e.target.value)}
+            >
+                {filterData.years.map((year) => (
+                    <option key={year} value={year}>
+                        {year}
+                    </option>
+                ))}
+            </Select>
             <Select
                 w="20%"
                 color="blue.500"
