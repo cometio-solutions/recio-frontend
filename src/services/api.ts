@@ -8,24 +8,6 @@ interface UserData {
     role: 'user' | 'editor' | 'admin';
 }
 
-const formatMajorMode = (major_mode: string) => {
-    if (major_mode === 'Mode.FULL_TIME') return 'Stacjonarne';
-    return 'Niestacjonarne';
-};
-
-const formatDegree = (degree: string) => {
-    if (degree === 'Degree.BACHELOR') return 'Inżnierskie';
-    return 'Magisterskie';
-};
-
-export const formatRecruitmentBody = (data: Recruitment) => {
-    return {
-        ...data,
-        major_mode: formatMajorMode(data.major_mode),
-        degree: formatDegree(data.degree),
-    };
-};
-
 export interface Recruitment {
     id: number;
     cycle_number: number;
@@ -37,6 +19,14 @@ export interface Recruitment {
     major_name: string;
     point_limit: number;
     slot_limit: number;
+}
+
+export interface Major {
+    id: number;
+    faculty: string;
+    mode: string;
+    name: string;
+    degree: string;
 }
 
 export interface EditorRequest {
@@ -162,6 +152,34 @@ export const importFile = (element: Element): Promise<string> => {
             .post(API_URL + '/file', formData, headers)
             .then((res) => resolve(res.data.message))
             .catch((err) => {
+                reject(err.response.data.error);
+            }),
+    );
+};
+
+export const getYears = (): Promise<number[]> => {
+    return new Promise((resolve, reject) =>
+        axios
+            .get(API_URL + '/years', authConfig())
+            .then((res) => {
+                resolve(res.data);
+            })
+            .catch((err) => {
+                console.error(err);
+                reject(err.response.data.error);
+            }),
+    );
+};
+
+export const getMajors = (): Promise<Major[]> => {
+    return new Promise((resolve, reject) =>
+        axios
+            .get(API_URL + '/majors', authConfig())
+            .then((res) => {
+                resolve(res.data);
+            })
+            .catch((err) => {
+                console.error(err);
                 reject(err.response.data.error);
             }),
     );
