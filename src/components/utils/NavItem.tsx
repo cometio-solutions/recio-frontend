@@ -6,10 +6,10 @@ export default function NavItem(props: {
     href: string;
     onClick?: () => void;
     text?: string;
-    active?: boolean;
     right?: boolean;
 }) {
-    const { href, text, active, right, onClick } = props;
+    const { href, text, right, onClick } = props;
+    const active = href === window.location.pathname;
     const bg = active ? 'blue.500' : 'transparent';
     const color = active ? 'white' : 'black';
     const bgHover = active ? bg : 'blue.100';

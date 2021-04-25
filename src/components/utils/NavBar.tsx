@@ -13,7 +13,7 @@ export default function NavBar(): ReactElement {
                     recIO
                 </Heading>
                 <Stack direction="row" ml="10" flexGrow={1}>
-                    <NavItem href="/" text="Strona główna" active />
+                    <NavItem href="/" text="Strona główna" />
                     <NavItem href="/recruitment" text="Lista rekrutacji" />
                     {isAdmin && (
                         <NavItem href="/admin" text="Panel administratora" />
