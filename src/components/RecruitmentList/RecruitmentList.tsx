@@ -5,12 +5,14 @@ import { Recruitment, getRecruitment } from '../../services/api';
 import Filter from './Filter';
 import { Flex } from '@chakra-ui/react';
 import NavBar from '../utils/NavBar';
+import { useHistory } from 'react-router';
 
 export default function RecruitmentList(): ReactElement {
     const [recruitmentList, setRecruitmentList] = useState<Recruitment[]>([]);
     const [filteredRecruitmentList, setFilteredRecruitmentList] = useState<
         Recruitment[]
     >([]);
+    const history = useHistory();
 
     useEffect(() => {
         getRecruitment().then((data) => {
@@ -18,6 +20,10 @@ export default function RecruitmentList(): ReactElement {
             setFilteredRecruitmentList(data);
         });
     }, []);
+
+    const handleRowClick = (id: number) => () => {
+        history.push(`/recruitment/${id}`);
+    };
 
     return (
         <Flex as="main" direction="column" minH="100vh" bg="gray.100">
@@ -53,6 +59,7 @@ export default function RecruitmentList(): ReactElement {
                         {filteredRecruitmentList.map(
                             (
                                 {
+                                    id,
                                     major_name,
                                     faculty,
                                     degree,
@@ -68,6 +75,7 @@ export default function RecruitmentList(): ReactElement {
                                     cursor="pointer"
                                     bg={is_active ? 'gray.200' : ''}
                                     key={idx}
+                                    onClick={handleRowClick(id)}
                                 >
                                     <Td>{idx + 1}</Td>
                                     <Td>{major_name}</Td>

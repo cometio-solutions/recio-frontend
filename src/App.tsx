@@ -8,6 +8,7 @@ import {
 
 import Login from './components/Login/Login';
 import Main from './components/Main/Main';
+import RecruitmentDetails from './components/RecruitmentDetails/RecruitmentDetails';
 import RecruitmentList from './components/RecruitmentList/RecruitmentList';
 import Register from './components/Register/Register';
 
@@ -23,7 +24,18 @@ function App({}: AppProps): ReactElement {
                 <Switch>
                     <Route path="/login" component={Login} />
                     <Route path="/register" component={Register} />
-                    <Route path="/recruitment" component={RecruitmentList} />
+                    <Route
+                        path="/recruitment/:id"
+                        render={({ match }) => (
+                            <RecruitmentDetails id={+match.params.id} />
+                        )}
+                        exact
+                    />
+                    <Route
+                        path="/recruitment"
+                        component={RecruitmentList}
+                        exact
+                    />
                     <Route path="/" component={Main} />
                 </Switch>
             </Router>
