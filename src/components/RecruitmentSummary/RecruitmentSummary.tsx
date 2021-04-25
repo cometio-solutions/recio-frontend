@@ -8,7 +8,7 @@ import {
     XAxis,
     YAxis,
 } from 'recharts';
-import { HStack, Heading, Stack } from '@chakra-ui/react';
+import { HStack, Heading, Stack, Flex } from '@chakra-ui/react';
 import React, { ReactElement } from 'react';
 
 const data = [
@@ -68,7 +68,7 @@ const cyclesData = [
 
 export default function RecruitmentSummary(): ReactElement {
     return (
-        <>
+        <Flex>
             <HStack>
                 <Stack>
                     <Heading textAlign="center" size="sm" mt="5">
@@ -128,6 +128,6 @@ export default function RecruitmentSummary(): ReactElement {
                     </LineChart>
                 </Stack>
             </HStack>
-        </>
+        </Flex>
     );
 }

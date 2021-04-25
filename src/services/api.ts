@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://134.122.71.130:5000';
+const API_URL = 'http://localhost:5000';
 const dbConnectionError = 'Błąd połączenia z bazą danych !';
 
 interface UserData {
@@ -19,6 +19,27 @@ export interface Recruitment {
     major_name: string;
     point_limit: number;
     slot_limit: number;
+}
+
+interface Candidate {
+    id: number;
+    name: string;
+    country: string;
+    city: string;
+    region: string;
+    highschool: string;
+    highschool_city: string;
+    pesel: string;
+    matura_points: number;
+    points: number;
+    is_paid: boolean;
+    college_name: string;
+    test_points: number;
+    field_of_study: string;
+}
+
+export interface RecruitmentDetails extends Recruitment {
+    candidates: Candidate[];
 }
 
 export interface Major {
@@ -135,6 +156,22 @@ export const getRecruitment = (): Promise<Recruitment[]> => {
             .get(API_URL + '/recruitment', authConfig())
             .then((res) => {
                 resolve(res.data.data);
+            })
+            .catch((err) => {
+                console.error(err);
+                reject(err.response.data.error);
+            }),
+    );
+};
+
+export const getRecruitmentDetails = (
+    id: number,
+): Promise<RecruitmentDetails> => {
+    return new Promise((resolve, reject) =>
+        axios
+            .get(API_URL + '/recruitment/' + id, authConfig())
+            .then((res) => {
+                resolve(res.data);
             })
             .catch((err) => {
                 console.error(err);
