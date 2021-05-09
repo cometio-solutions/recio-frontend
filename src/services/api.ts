@@ -21,7 +21,7 @@ export interface Recruitment {
     slot_limit: number;
 }
 
-interface Candidate {
+export interface Candidate {
     id: number;
     name: string;
     country: string;
