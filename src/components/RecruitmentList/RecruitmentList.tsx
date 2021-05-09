@@ -76,13 +76,21 @@ export default function RecruitmentList(): ReactElement {
                                     bg={is_active ? 'gray.200' : ''}
                                     key={idx}
                                     onClick={handleRowClick(id)}
+                                    _hover={{
+                                        cursor: 'pointer',
+                                        backgroundColor: 'grey',
+                                    }}
                                 >
                                     <Td>{idx + 1}</Td>
                                     <Td>{major_name}</Td>
                                     <Td>{faculty}</Td>
                                     <Td>{degree}</Td>
                                     <Td>{major_mode}</Td>
-                                    <Td>{point_limit || '-'}</Td>
+                                    <Td>
+                                        {point_limit !== null
+                                            ? point_limit
+                                            : '-'}
+                                    </Td>
                                     <Td>{end_date}</Td>
                                     <Td>{slot_limit}</Td>
                                 </Tr>

@@ -21,7 +21,7 @@ export interface Recruitment {
     slot_limit: number;
 }
 
-interface Candidate {
+export interface Candidate {
     id: number;
     name: string;
     country: string;
@@ -31,11 +31,16 @@ interface Candidate {
     highschool_city: string;
     pesel: string;
     matura_points: number;
+    matura_date: string;
+    graduation_date: string;
     points: number;
     is_paid: boolean;
     college_name: string;
     test_points: number;
     field_of_study: string;
+    average: number;
+    mode: string;
+    status: string;
 }
 
 export interface RecruitmentDetails extends Recruitment {
@@ -171,6 +176,7 @@ export const getRecruitmentDetails = (
         axios
             .get(API_URL + '/recruitment/' + id, authConfig())
             .then((res) => {
+                console.log(res.data);
                 resolve(res.data);
             })
             .catch((err) => {

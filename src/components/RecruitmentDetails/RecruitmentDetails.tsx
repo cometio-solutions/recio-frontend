@@ -20,11 +20,13 @@ import {
 import NavBar from '../utils/NavBar';
 import { useState, useEffect } from 'react';
 import {
+    Candidate,
     getRecruitmentDetails,
     RecruitmentDetails,
 } from './../../services/api';
 import { CheckIcon, CloseIcon } from '@chakra-ui/icons';
 import RecruitmentSummary from '../RecruitmentSummary/RecruitmentSummary';
+import CandidateDetails from '../CandidateDetails/CandidateDetails';
 
 interface Props {
     id: number;
@@ -33,6 +35,14 @@ interface Props {
 export default function RecruitmentDetails({ id }: Props) {
     const [details, setDetails] = useState<RecruitmentDetails>();
     const { isOpen, onOpen, onClose } = useDisclosure();
+    const {
+        isOpen: isCandidateDetailsOpen,
+        onOpen: onCandidateDetailsOpen,
+        onClose: onCandidateDetailsClose,
+    } = useDisclosure();
+    const [selectedCandidate, setSelectedCandidate] = useState<Candidate>(
+        {} as Candidate,
+    );
 
     useEffect(() => {
         getRecruitmentDetails(id).then(setDetails);
@@ -46,6 +56,11 @@ export default function RecruitmentDetails({ id }: Props) {
 
     return (
         <Flex as="main" direction="column" minH="100vh" bg="gray.100">
+            <CandidateDetails
+                isOpen={isCandidateDetailsOpen}
+                onClose={onCandidateDetailsClose}
+                candidate={selectedCandidate}
+            />
             <Modal isOpen={isOpen} onClose={onClose} size="full">
                 <ModalOverlay />
                 <ModalContent>
@@ -72,24 +87,46 @@ export default function RecruitmentDetails({ id }: Props) {
                 >
                     <Flex direction="column" mr="8">
                         <Text>
-                            Status:{' '}
-                            {details.is_active ? 'AKTYWNA' : 'NIEAKTYWNA'}
+                            <b>Status: </b>
+                            <Text
+                                as="b"
+                                color={details.is_active ? 'green' : 'red'}
+                            >
+                                {details.is_active ? 'AKTYWNA' : 'NIEAKTYWNA'}{' '}
+                            </Text>
                         </Text>
                         <Text>
-                            Ilość miejsc: {details.candidates.length} /{' '}
-                            {details.slot_limit}
+                            <b>Ilość miejsc: </b>
+                            {details.candidates.length} / {details.slot_limit}
                         </Text>
-                        <Text>Numer cyklu: {details.cycle_number}</Text>
+                        <Text>
+                            <b>Numer cyklu:</b> {details.cycle_number}
+                        </Text>
                     </Flex>
                     <Flex direction="column" mr="8">
-                        <Text>Data zakończenia: {details.end_date}</Text>
-                        <Text>Kierunek: {details.major_name}</Text>
-                        <Text>Wydział: {details.faculty}</Text>
+                        <Text>
+                            <b>Data zakończenia:</b> {details.end_date}
+                        </Text>
+                        <Text>
+                            <b>Kierunek:</b> {details.major_name}
+                        </Text>
+                        <Text>
+                            <b>Wydział:</b> {details.faculty}
+                        </Text>
                     </Flex>
                     <Flex direction="column" mr="8">
-                        <Text>Tryb: {details.major_mode}</Text>
-                        <Text>Stopień: {details.degree}</Text>
-                        <Text>Próg: {details.point_limit}</Text>
+                        <Text>
+                            <b>Tryb:</b> {details.major_mode}
+                        </Text>
+                        <Text>
+                            <b>Stopień:</b> {details.degree}
+                        </Text>
+                        <Text>
+                            <b>Próg:</b>{' '}
+                            {details.point_limit !== null
+                                ? details.point_limit
+                                : '-'}
+                        </Text>
                     </Flex>
                     <Button onClick={onOpen}>Pokaż wykresy</Button>
                 </Flex>
@@ -128,27 +165,35 @@ export default function RecruitmentDetails({ id }: Props) {
                     </Thead>
                     <Tbody>
                         {details &&
-                            details.candidates.map(
-                                (
-                                    {
-                                        id,
-                                        name,
-                                        country,
-                                        city,
-                                        region,
-                                        college_name,
-                                        highschool,
-                                        highschool_city,
-                                        field_of_study,
-                                        matura_points,
-                                        test_points,
-                                        points,
-                                        pesel,
-                                        is_paid,
-                                    },
-                                    i,
-                                ) => (
-                                    <Tr key={id}>
+                            details.candidates.map((candidate, i) => {
+                                const {
+                                    id,
+                                    name,
+                                    country,
+                                    city,
+                                    region,
+                                    college_name,
+                                    highschool,
+                                    highschool_city,
+                                    field_of_study,
+                                    matura_points,
+                                    test_points,
+                                    points,
+                                    pesel,
+                                    is_paid,
+                                } = candidate;
+                                return (
+                                    <Tr
+                                        key={id}
+                                        onClick={() => {
+                                            setSelectedCandidate(candidate);
+                                            onCandidateDetailsOpen();
+                                        }}
+                                        _hover={{
+                                            cursor: 'pointer',
+                                            backgroundColor: 'grey',
+                                        }}
+                                    >
                                         <Td>{i + 1}</Td>
                                         <Td>{name}</Td>
                                         <Td>{country}</Td>
@@ -176,8 +221,8 @@ export default function RecruitmentDetails({ id }: Props) {
                                             {!is_paid && unpaidIcon}
                                         </Td>
                                     </Tr>
-                                ),
-                            )}
+                                );
+                            })}
                     </Tbody>
                 </Table>
             </Flex>
