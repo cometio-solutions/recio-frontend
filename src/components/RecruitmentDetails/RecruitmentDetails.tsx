@@ -17,7 +17,13 @@ import {
     ModalHeader,
     ModalFooter,
     chakra,
-    Box,
+    NumberInput,
+    NumberDecrementStepper,
+    NumberIncrementStepper,
+    NumberInputField,
+    NumberInputStepper,
+    Select,
+    HStack,
 } from '@chakra-ui/react';
 import NavBar from '../utils/NavBar';
 import { useState, useEffect } from 'react';
@@ -33,7 +39,7 @@ import {
     TriangleUpIcon,
 } from '@chakra-ui/icons';
 import RecruitmentSummary from '../RecruitmentSummary/RecruitmentSummary';
-import { Column, useFilters, useSortBy, useTable } from 'react-table';
+import { Column, usePagination, useSortBy, useTable } from 'react-table';
 
 interface DetailsTableProps {
     details: RecruitmentDetailsType;
@@ -94,56 +100,134 @@ function DetailsTable({ details }: DetailsTableProps) {
         getTableProps,
         getTableBodyProps,
         headerGroups,
-        rows,
         prepareRow,
-    } = useTable({ data, columns }, useSortBy);
+        page,
+        canPreviousPage,
+        canNextPage,
+        pageCount,
+        gotoPage,
+        nextPage,
+        previousPage,
+        setPageSize,
+        state: { pageIndex, pageSize },
+    } = useTable({ data, columns }, useSortBy, usePagination);
+
+    console.log(pageCount);
 
     return (
-        <Table
-            colorScheme="blue"
-            mt="5"
-            textAlign="center"
-            {...getTableProps()}
-        >
-            <Thead>
-                {headerGroups.map((group) => (
-                    <Tr fontWeight="600" {...group.getHeaderGroupProps()}>
-                        {group.headers.map((col) => (
-                            <Th
-                                {...col.getHeaderProps(
-                                    col.getSortByToggleProps(),
-                                )}
-                            >
-                                {col.render('Header')}
-                                <chakra.span pl="2">
-                                    {col.isSorted ? (
-                                        col.isSortedDesc ? (
-                                            <TriangleDownIcon />
-                                        ) : (
-                                            <TriangleUpIcon />
-                                        )
-                                    ) : null}
-                                </chakra.span>
-                            </Th>
-                        ))}
-                    </Tr>
-                ))}
-            </Thead>
-            <Tbody {...getTableBodyProps()}>
-                {rows.map((row) => {
-                    prepareRow(row);
-                    return (
-                        <Tr {...row.getRowProps()}>
-                            {row.cells.map((cell) => (
-                                <Td {...cell.getCellProps()}>
-                                    {cell.render('Cell')}
-                                </Td>
+        <>
+            <Table
+                colorScheme="blue"
+                mt="5"
+                textAlign="center"
+                {...getTableProps()}
+            >
+                <Thead>
+                    {headerGroups.map((group) => (
+                        <Tr fontWeight="600" {...group.getHeaderGroupProps()}>
+                            {group.headers.map((col) => (
+                                <Th
+                                    {...col.getHeaderProps(
+                                        col.getSortByToggleProps(),
+                                    )}
+                                >
+                                    {col.render('Header')}
+                                    <chakra.span pl="2">
+                                        {col.isSorted ? (
+                                            col.isSortedDesc ? (
+                                                <TriangleDownIcon />
+                                            ) : (
+                                                <TriangleUpIcon />
+                                            )
+                                        ) : null}
+                                    </chakra.span>
+                                </Th>
                             ))}
                         </Tr>
-                    );
-                })}
-            </Tbody>
-        </Table>
+                    ))}
+                </Thead>
+                <Tbody {...getTableBodyProps()}>
+                    {page.map((row) => {
+                        prepareRow(row);
+                        return (
+                            <Tr {...row.getRowProps()}>
+                                {row.cells.map((cell) => (
+                                    <Td {...cell.getCellProps()}>
+                                        {cell.render('Cell')}
+                                    </Td>
+                                ))}
+                            </Tr>
+                        );
+                    })}
+                </Tbody>
+            </Table>
+            <Flex
+                bg="white"
+                p="3"
+                alignItems="center"
+                mt="2"
+                mb="3"
+                borderRadius="xl"
+            >
+                <HStack spacing="1">
+                    <Button
+                        colorScheme="blue"
+                        onClick={() => gotoPage(0)}
+                        disabled={!canPreviousPage}
+                    >
+                        {'<<'}
+                    </Button>
+                    <Button
+                        colorScheme="blue"
+                        onClick={() => previousPage()}
+                        disabled={!canPreviousPage}
+                    >
+                        {'<'}
+                    </Button>
+                    <Button
+                        colorScheme="blue"
+                        onClick={() => nextPage()}
+                        disabled={!canNextPage}
+                    >
+                        {'>'}
+                    </Button>
+                    <Button
+                        colorScheme="blue"
+                        onClick={() => gotoPage(pageCount - 1)}
+                        disabled={!canNextPage}
+                    >
+                        {'>>'}
+                    </Button>
+                </HStack>
+                <Text pl="2">
+                    Strona {pageIndex + 1} z {pageCount} | Przejdź do strony
+                </Text>
+                <NumberInput
+                    defaultValue={1}
+                    min={1}
+                    max={pageCount}
+                    onChange={(p) => gotoPage(+p - 1)}
+                    width="20"
+                    pl="1"
+                >
+                    <NumberInputField />
+                    <NumberInputStepper>
+                        <NumberIncrementStepper />
+                        <NumberDecrementStepper />
+                    </NumberInputStepper>
+                </NumberInput>
+                <Select
+                    value={pageSize}
+                    onChange={(e) => setPageSize(+e.target.value)}
+                    width="30"
+                    pl="2"
+                >
+                    {[10, 20, 30, 40, 50].map((size) => (
+                        <option value={size}>Pokaż {size}</option>
+                    ))}
+                </Select>
+            </Flex>
+        </>
     );
 }
 
