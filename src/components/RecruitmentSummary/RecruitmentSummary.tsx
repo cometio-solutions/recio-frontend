@@ -8,35 +8,20 @@ import {
     XAxis,
     YAxis,
 } from 'recharts';
-import { HStack, Heading, Stack, Flex } from '@chakra-ui/react';
-import React, { ReactElement } from 'react';
+import {
+    CandidatesOrigin,
+    CandidatesPoints,
+    PointLimit,
+    getCandidatesOrigin,
+    getCandidatesPointsDistribution,
+    getPointLimitForCycles,
+} from '../../../src/services/api';
+import { Flex, HStack, Heading, Stack } from '@chakra-ui/react';
+import React, { ReactElement, useEffect, useState } from 'react';
 
-const data = [
-    {
-        name: 'malopolska',
-        value: 30,
-    },
-    {
-        name: 'mazowsze',
-        value: 10,
-    },
-    {
-        name: 'pomorskie',
-        value: 2,
-    },
-    {
-        name: 'opolskie',
-        value: 3,
-    },
-    {
-        name: 'dolnoślaskie',
-        value: 15,
-    },
-    {
-        name: 'wielkopolska',
-        value: 13,
-    },
-];
+interface RecruitmentDetailsProps {
+    id: number;
+}
 
 const getRandomData = (): any[] => {
     let data = [];
@@ -51,63 +36,54 @@ const getRandomData = (): any[] => {
     });
 };
 
-const cyclesData = [
-    {
-        name: 1,
-        value: 930,
-    },
-    {
-        name: 2,
-        value: 900,
-    },
-    {
-        name: 3,
-        value: 800,
-    },
-];
-
-export default function RecruitmentSummary(): ReactElement {
+export default function RecruitmentSummary({
+    id,
+}: RecruitmentDetailsProps): ReactElement {
+    const [cyclesPointLimit, setCyclesPointLimit] = useState<PointLimit[]>([]);
+    const [candidateOrigin, setCandidateOrigin] = useState<CandidatesOrigin[]>(
+        [],
+    );
+    const [pointsDistribution, setPointsDistribution] = useState<
+        CandidatesPoints[]
+    >([]);
+    useEffect(() => {
+        getPointLimitForCycles(id)
+            .then((data) =>
+                setCyclesPointLimit(
+                    data.sort((a, b) => a.point_limit - b.point_limit),
+                ),
+            )
+            .catch((err) => console.log(err));
+        getCandidatesOrigin(id).then((data) => setCandidateOrigin(data));
+        getCandidatesPointsDistribution(id).then((data) =>
+            setPointsDistribution(data.sort((a, b) => a.points - b.points)),
+        );
+    }, []);
     return (
-        <Flex>
+        <Stack spacing={3} align="center">
             <HStack>
                 <Stack>
                     <Heading textAlign="center" size="sm" mt="5">
                         Pochodzenie kandydatów
                     </Heading>
                     <BarChart
-                        width={600}
+                        width={1800}
                         height={300}
-                        data={data}
+                        data={candidateOrigin}
                         barGap={2}
                         barCategoryGap={3}
                     >
                         <CartesianGrid strokeDasharray="10 10"></CartesianGrid>
                         <XAxis
-                            dataKey="name"
+                            dataKey="origin"
                             name="test"
                             interval={0}
                             tick={{ fontSize: 10 }}
                         />
                         <YAxis />
                         <Tooltip />
-                        <Bar maxBarSize={50} dataKey="value" fill="#8884d8" />
+                        <Bar maxBarSize={50} dataKey="amount" fill="#8884d8" />
                     </BarChart>
-                </Stack>
-                <Stack>
-                    <Heading textAlign="center" size="sm" mt="5">
-                        Rozkład punktów
-                    </Heading>
-                    <LineChart width={600} height={300} data={getRandomData()}>
-                        <XAxis dataKey="point" interval={5} minTickGap={0} />
-                        <YAxis />
-                        <Tooltip />
-                        <CartesianGrid stroke="#f5f5f5" />
-                        <Line
-                            type="monotone"
-                            dataKey="value"
-                            stroke="#ff7300"
-                        />
-                    </LineChart>
                 </Stack>
             </HStack>
             <HStack>
@@ -115,19 +91,43 @@ export default function RecruitmentSummary(): ReactElement {
                     <Heading textAlign="center" size="sm" mt="5">
                         Próg punktowy w poszczególnych cyklach rekrutacji
                     </Heading>
-                    <LineChart width={600} height={300} data={cyclesData}>
-                        <XAxis dataKey="name" interval={0} minTickGap={0} />
+                    <LineChart width={600} height={300} data={cyclesPointLimit}>
+                        <XAxis
+                            dataKey="cycle_number"
+                            interval={0}
+                            minTickGap={0}
+                        />
                         <YAxis />
                         <Tooltip />
                         <CartesianGrid stroke="#f5f5f5" />
                         <Line
                             type="monotone"
-                            dataKey="value"
+                            dataKey="point_limit"
+                            stroke="#ff7300"
+                        />
+                    </LineChart>
+                </Stack>
+                <Stack>
+                    <Heading textAlign="center" size="sm" mt="5">
+                        Rozkład punktów
+                    </Heading>
+                    <LineChart
+                        width={1000}
+                        height={300}
+                        data={pointsDistribution}
+                    >
+                        <XAxis dataKey="points" interval={5} minTickGap={0} />
+                        <YAxis />
+                        <Tooltip />
+                        <CartesianGrid stroke="#f5f5f5" />
+                        <Line
+                            type="monotone"
+                            dataKey="numberOfStudents"
                             stroke="#ff7300"
                         />
                     </LineChart>
                 </Stack>
             </HStack>
-        </Flex>
+        </Stack>
     );
 }
