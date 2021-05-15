@@ -1,36 +1,35 @@
 import * as React from 'react';
+
 import {
-    Flex,
-    Table,
-    Thead,
-    Tr,
-    Th,
-    Tbody,
-    Td,
-    Text,
     Button,
-    useDisclosure,
+    Flex,
+    HStack,
     Modal,
-    ModalOverlay,
     ModalBody,
     ModalContent,
-    ModalHeader,
     ModalFooter,
-    chakra,
-    NumberInput,
+    ModalHeader,
+    ModalOverlay,
     NumberDecrementStepper,
     NumberIncrementStepper,
+    NumberInput,
     NumberInputField,
     NumberInputStepper,
     Select,
-    HStack,
+    Table,
+    Tbody,
+    Td,
+    Text,
+    Th,
+    Thead,
+    Tr,
+    chakra,
+    useDisclosure,
 } from '@chakra-ui/react';
-import NavBar from '../utils/NavBar';
-import { useState, useEffect } from 'react';
 import {
-    getRecruitmentDetails,
-    RecruitmentDetails as RecruitmentDetailsType,
     Candidate,
+    RecruitmentDetails as RecruitmentDetailsType,
+    getRecruitmentDetails,
 } from './../../services/api';
 import {
     CheckIcon,
@@ -38,8 +37,11 @@ import {
     TriangleDownIcon,
     TriangleUpIcon,
 } from '@chakra-ui/icons';
-import RecruitmentSummary from '../RecruitmentSummary/RecruitmentSummary';
 import { Column, usePagination, useSortBy, useTable } from 'react-table';
+import { useEffect, useState } from 'react';
+
+import NavBar from '../utils/NavBar';
+import RecruitmentSummary from '../RecruitmentSummary/RecruitmentSummary';
 
 interface DetailsTableProps {
     details: RecruitmentDetailsType;
@@ -253,7 +255,7 @@ export default function RecruitmentDetails({ id }: Props) {
                 <ModalContent>
                     <ModalHeader>Podsumowanie rekrutacji</ModalHeader>
                     <ModalBody>
-                        <RecruitmentSummary />
+                        <RecruitmentSummary id={id} />
                     </ModalBody>
                     <ModalFooter>
                         <Button onClick={onClose}>Zamknij</Button>

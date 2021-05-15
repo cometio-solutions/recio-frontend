@@ -55,6 +55,21 @@ export interface EditorRequest {
     email: string;
 }
 
+export interface PointLimit {
+    cycle_number: number;
+    point_limit: number;
+}
+
+export interface CandidatesOrigin {
+    origin: string;
+    amount: number;
+}
+
+export interface CandidatesPoints {
+    points: number;
+    numberOfStudents: number;
+}
+
 const config = {
     headers: {
         accept: 'application/json',
@@ -104,6 +119,7 @@ export const register = (
                 config,
             )
             .then((res) => {
+                console.log(res);
                 resolve(res.data);
             })
             .catch((err) => {
@@ -214,6 +230,59 @@ export const getMajors = (): Promise<Major[]> => {
             .get(API_URL + '/majors', authConfig())
             .then((res) => {
                 resolve(res.data);
+            })
+            .catch((err) => {
+                console.error(err);
+                reject(err.response.data.error);
+            }),
+    );
+};
+
+export const getPointLimitForCycles = (
+    recruitment_id: number,
+): Promise<PointLimit[]> => {
+    return new Promise((resolve, reject) =>
+        axios
+            .get(API_URL + '/point-limit/' + recruitment_id, authConfig())
+            .then((res) => {
+                resolve(res.data);
+            })
+            .catch((err) => {
+                console.error(err);
+                reject(err.response.data.error);
+            }),
+    );
+};
+
+export const getCandidatesPointsDistribution = (
+    recruitment_id: number,
+): Promise<CandidatesPoints[]> => {
+    return new Promise((resolve, reject) =>
+        axios
+            .get(API_URL + '/points/' + recruitment_id, authConfig())
+            .then((res) => resolve(res.data))
+            .catch((err) => {
+                console.error(err);
+                reject(err.response.data.error);
+            }),
+    );
+};
+
+export const getCandidatesOrigin = (
+    id: number,
+): Promise<CandidatesOrigin[]> => {
+    return new Promise((resolve, reject) =>
+        axios
+            .get(API_URL + '/origins/' + id, authConfig())
+            .then((res) => {
+                const candidatesOrigin: CandidatesOrigin[] = [];
+                for (const origin of Object.keys(res.data)) {
+                    candidatesOrigin.push({
+                        origin,
+                        amount: res.data[origin],
+                    });
+                }
+                resolve(candidatesOrigin);
             })
             .catch((err) => {
                 console.error(err);
