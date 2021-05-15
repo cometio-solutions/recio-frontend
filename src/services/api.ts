@@ -245,7 +245,6 @@ export const getPointLimitForCycles = (
         axios
             .get(API_URL + '/point-limit/' + recruitment_id, authConfig())
             .then((res) => {
-                console.log(res.data);
                 resolve(res.data);
             })
             .catch((err) => {
