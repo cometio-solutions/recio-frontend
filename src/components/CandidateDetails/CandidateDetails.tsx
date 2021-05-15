@@ -12,7 +12,7 @@ import {
 import React, { ReactElement } from 'react';
 
 import type { Candidate } from 'src/services/api';
-import { Icon } from "@chakra-ui/react"
+import { Icon } from '@chakra-ui/react';
 import { InfoOutlineIcon } from '@chakra-ui/icons';
 
 interface CandidateDetailsProps {
@@ -30,7 +30,9 @@ export default function CandidateDetails({
         <Modal isOpen={isOpen} onClose={onClose} size="2xl">
             <ModalOverlay />
             <ModalContent>
-                <ModalHeader>Sczegółowe dane kandydata <Icon as={InfoOutlineIcon} /></ModalHeader>
+                <ModalHeader>
+                    Sczegółowe dane kandydata <Icon as={InfoOutlineIcon} />
+                </ModalHeader>
                 <ModalBody>
                     <Flex direction="column" mr="8">
                         <Text>
@@ -69,7 +71,10 @@ export default function CandidateDetails({
                         )}{' '}
                         {candidate.graduation_date && (
                             <Text>
-                                <b>Data ukończenia studiów pierwszego stopnia: </b> {candidate.graduation_date}
+                                <b>
+                                    Data ukończenia studiów pierwszego stopnia:{' '}
+                                </b>{' '}
+                                {candidate.graduation_date}
                             </Text>
                         )}
                         {candidate.mode && (
@@ -79,7 +84,8 @@ export default function CandidateDetails({
                         )}
                         {candidate.average && (
                             <Text>
-                                <b>Średnia z studiów pierwszego stopnia: </b> {candidate.average}
+                                <b>Średnia z studiów pierwszego stopnia: </b>{' '}
+                                {candidate.average}
                             </Text>
                         )}
                     </Flex>
