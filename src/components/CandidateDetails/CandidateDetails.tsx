@@ -134,11 +134,11 @@ export default function CandidateDetails({
                                     <Td>{recruitment.end_date}</Td>
                                     <Td>
                                         {Math.random() > 0.5 ? (
-                                            <Text as={"b"} color="green">
+                                            <Text as={'b'} color="green">
                                                 ZAKWALIFIKOWANY
                                             </Text>
                                         ) : (
-                                            <Text as={"b"} color="red">
+                                            <Text as={'b'} color="red">
                                                 NIEZAKWALIFIKOWANY
                                             </Text>
                                         )}
