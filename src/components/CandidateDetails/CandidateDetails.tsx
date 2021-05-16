@@ -1,5 +1,6 @@
 import {
     Button,
+    Center,
     Flex,
     Modal,
     ModalBody,
@@ -7,11 +8,21 @@ import {
     ModalFooter,
     ModalHeader,
     ModalOverlay,
+    Table,
+    Tbody,
+    Td,
     Text,
+    Th,
+    Thead,
+    Tr,
 } from '@chakra-ui/react';
-import React, { ReactElement } from 'react';
+import {
+    Candidate,
+    HistoryRecruitment,
+    getCandidateRecruitmentHistory,
+} from '../../services/api';
+import React, { ReactElement, useEffect, useState } from 'react';
 
-import type { Candidate } from 'src/services/api';
 import { Icon } from '@chakra-ui/react';
 import { InfoOutlineIcon } from '@chakra-ui/icons';
 
@@ -26,8 +37,18 @@ export default function CandidateDetails({
     onClose,
     candidate,
 }: CandidateDetailsProps): ReactElement {
+    const [recruitmentHistory, setRecruitmentHistory] = useState<
+        HistoryRecruitment[]
+    >([]);
+
+    useEffect(() => {
+        getCandidateRecruitmentHistory(candidate.pesel).then((data) =>
+            setRecruitmentHistory(data),
+        );
+    }, [candidate]);
+
     return (
-        <Modal isOpen={isOpen} onClose={onClose} size="2xl">
+        <Modal isOpen={isOpen} onClose={onClose} size="5xl">
             <ModalOverlay />
             <ModalContent>
                 <ModalHeader>
@@ -89,6 +110,43 @@ export default function CandidateDetails({
                             </Text>
                         )}
                     </Flex>
+                    <Center marginTop={10}>
+                        <Text as="b">HISTORIA REKRUTACJI</Text>
+                    </Center>
+                    <Table size="sm">
+                        <Thead>
+                            <Tr>
+                                <Th>Kierunek</Th>
+                                <Th>Wydział</Th>
+                                <Th>Stopień</Th>
+                                <Th>Tryb</Th>
+                                <Th>Data zakończenia</Th>
+                                <Th>Status rekrutacji</Th>
+                            </Tr>
+                        </Thead>
+                        <Tbody>
+                            {recruitmentHistory.map((recruitment) => (
+                                <Tr key={recruitment.id}>
+                                    <Td>{recruitment.faculty}</Td>
+                                    <Td>{recruitment.major_name}</Td>
+                                    <Td>{recruitment.degree}</Td>
+                                    <Td>{recruitment.major_mode}</Td>
+                                    <Td>{recruitment.end_date}</Td>
+                                    <Td>
+                                        {Math.random() > 0.5 ? (
+                                            <Text as={"b"} color="green">
+                                                ZAKWALIFIKOWANY
+                                            </Text>
+                                        ) : (
+                                            <Text as={"b"} color="red">
+                                                NIEZAKWALIFIKOWANY
+                                            </Text>
+                                        )}
+                                    </Td>
+                                </Tr>
+                            ))}
+                        </Tbody>
+                    </Table>
                 </ModalBody>
                 <ModalFooter>
                     <Button onClick={onClose}>Zamknij</Button>

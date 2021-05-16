@@ -21,6 +21,17 @@ export interface Recruitment {
     slot_limit: number;
 }
 
+export interface HistoryRecruitment {
+    id: number;
+    end_date: string;
+    cycle_number: number;
+    is_active: boolean;
+    faculty: string;
+    degree: string;
+    major_name: string;
+    major_mode: string;
+}
+
 export interface Candidate {
     id: number;
     name: string;
@@ -192,7 +203,6 @@ export const getRecruitmentDetails = (
         axios
             .get(API_URL + '/recruitment/' + id, authConfig())
             .then((res) => {
-                console.log(res.data);
                 resolve(res.data);
             })
             .catch((err) => {
@@ -289,6 +299,22 @@ export const getCandidatesOrigin = (
                     });
                 }
                 resolve(candidatesOrigin);
+            })
+            .catch((err) => {
+                console.error(err);
+                reject(err.response.data.error);
+            }),
+    );
+};
+
+export const getCandidateRecruitmentHistory = (
+    pesel: string,
+): Promise<HistoryRecruitment[]> => {
+    return new Promise((resolve, reject) =>
+        axios
+            .get(API_URL + '/candidate/migration/' + pesel, authConfig())
+            .then((res) => {
+                resolve(res.data.data);
             })
             .catch((err) => {
                 console.error(err);

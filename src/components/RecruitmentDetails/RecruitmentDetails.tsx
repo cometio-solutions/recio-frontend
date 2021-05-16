@@ -122,8 +122,6 @@ function DetailsTable({
         state: { pageIndex, pageSize },
     } = useTable({ data, columns }, useSortBy, usePagination);
 
-    console.log(pageCount);
-
     return (
         <>
             <Table
