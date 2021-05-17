@@ -307,6 +307,15 @@ export const getCandidatesOrigin = (
     );
 };
 
+export const updatePointLimits = (): Promise<string> => {
+    return new Promise((resolve, reject) =>
+        axios
+            .post(API_URL + '/point-limit', {}, authConfig())
+            .then((res) => resolve(res.data.message))
+            .catch((err) => reject(err.response.data.error)),
+    );
+};
+
 export const getCandidateRecruitmentHistory = (
     pesel: string,
 ): Promise<HistoryRecruitment[]> => {
