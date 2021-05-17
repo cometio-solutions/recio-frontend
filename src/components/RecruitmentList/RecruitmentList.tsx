@@ -1,9 +1,7 @@
 import {
     Button,
-    chakra,
-    Text,
-    Heading,
     HStack,
+    Heading,
     NumberDecrementStepper,
     NumberIncrementStepper,
     NumberInput,
@@ -13,19 +11,21 @@ import {
     Table,
     Tbody,
     Td,
+    Text,
     Th,
     Thead,
     Tr,
+    chakra,
 } from '@chakra-ui/react';
+import { Column, usePagination, useSortBy, useTable } from 'react-table';
 import React, { ReactElement, useEffect, useState } from 'react';
 import { Recruitment, getRecruitment } from '../../services/api';
+import { TriangleDownIcon, TriangleUpIcon } from '@chakra-ui/icons';
 
 import Filter from './Filter';
 import { Flex } from '@chakra-ui/react';
 import NavBar from '../utils/NavBar';
 import { useHistory } from 'react-router';
-import { Column, usePagination, useSortBy, useTable } from 'react-table';
-import { TriangleDownIcon, TriangleUpIcon } from '@chakra-ui/icons';
 
 export default function RecruitmentList(): ReactElement {
     const [recruitmentList, setRecruitmentList] = useState<Recruitment[]>([]);

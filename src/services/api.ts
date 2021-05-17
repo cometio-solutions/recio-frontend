@@ -21,6 +21,17 @@ export interface Recruitment {
     slot_limit: number;
 }
 
+export interface HistoryRecruitment {
+    id: number;
+    end_date: string;
+    cycle_number: number;
+    is_active: boolean;
+    faculty: string;
+    degree: string;
+    major_name: string;
+    major_mode: string;
+}
+
 export interface Candidate {
     id: number;
     name: string;
@@ -31,11 +42,16 @@ export interface Candidate {
     highschool_city: string;
     pesel: string;
     matura_points: number;
+    matura_date: string;
+    graduation_date: string;
     points: number;
     is_paid: boolean;
     college_name: string;
     test_points: number;
     field_of_study: string;
+    average: number;
+    mode: string;
+    status: string;
 }
 
 export interface RecruitmentDetails extends Recruitment {
@@ -297,5 +313,21 @@ export const updatePointLimits = (): Promise<string> => {
             .post(API_URL + '/point-limit', {}, authConfig())
             .then((res) => resolve(res.data.message))
             .catch((err) => reject(err.response.data.error)),
+    );
+};
+
+export const getCandidateRecruitmentHistory = (
+    pesel: string,
+): Promise<HistoryRecruitment[]> => {
+    return new Promise((resolve, reject) =>
+        axios
+            .get(API_URL + '/candidate/migration/' + pesel, authConfig())
+            .then((res) => {
+                resolve(res.data.data);
+            })
+            .catch((err) => {
+                console.error(err);
+                reject(err.response.data.error);
+            }),
     );
 };
