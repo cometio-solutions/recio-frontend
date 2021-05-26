@@ -212,6 +212,36 @@ export const getRecruitmentDetails = (
     );
 };
 
+export const getPreviousRecruitmentCycle = (
+    id: number,
+): Promise<RecruitmentDetails> => {
+    return new Promise((resolve, reject) =>
+        axios
+            .get(API_URL + '/recruitment/' + id + '/previous', authConfig())
+            .then((res) => {
+                resolve(res.data);
+            })
+            .catch((err) => {
+                reject(err.response.data.error);
+            }),
+    );
+};
+
+export const getNextRecruitmentCycle = (
+    id: number,
+): Promise<RecruitmentDetails> => {
+    return new Promise((resolve, reject) =>
+        axios
+            .get(API_URL + '/recruitment/' + id + '/next', authConfig())
+            .then((res) => {
+                resolve(res.data);
+            })
+            .catch((err) => {
+                reject(err.response.data.error);
+            }),
+    );
+};
+
 export const importFile = (element: Element): Promise<string> => {
     const formData = new FormData();
     formData.append('data', (element as any).files[0]);

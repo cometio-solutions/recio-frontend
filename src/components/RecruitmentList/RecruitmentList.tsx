@@ -140,6 +140,10 @@ export default function RecruitmentList(): ReactElement {
                                     bg={
                                         row.original.is_active ? 'gray.200' : ''
                                     }
+                                    _hover={{
+                                        cursor: 'pointer',
+                                        backgroundColor: 'grey',
+                                    }}
                                     onClick={handleRowClick(row.original.id)}
                                     {...row.getRowProps()}
                                 >
