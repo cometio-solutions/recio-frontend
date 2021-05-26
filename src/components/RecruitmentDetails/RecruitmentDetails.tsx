@@ -1,6 +1,14 @@
 import * as React from 'react';
 
 import {
+    ArrowBackIcon,
+    ArrowForwardIcon,
+    CheckIcon,
+    CloseIcon,
+    TriangleDownIcon,
+    TriangleUpIcon,
+} from '@chakra-ui/icons';
+import {
     Button,
     Flex,
     HStack,
@@ -29,14 +37,10 @@ import {
 import {
     Candidate,
     RecruitmentDetails as RecruitmentDetailsType,
+    getNextRecruitmentCycle,
+    getPreviousRecruitmentCycle,
     getRecruitmentDetails,
 } from './../../services/api';
-import {
-    CheckIcon,
-    CloseIcon,
-    TriangleDownIcon,
-    TriangleUpIcon,
-} from '@chakra-ui/icons';
 import { Column, usePagination, useSortBy, useTable } from 'react-table';
 import { useEffect, useState } from 'react';
 
@@ -256,6 +260,7 @@ interface Props {
 export default function RecruitmentDetails({ id }: Props) {
     const [details, setDetails] = useState<RecruitmentDetailsType>();
     const { isOpen, onOpen, onClose } = useDisclosure();
+    const [recruitmentId, setRecruitmentId] = useState<number>(id);
     const {
         isOpen: isCandidateDetailsOpen,
         onOpen: onCandidateDetailsOpen,
@@ -264,6 +269,24 @@ export default function RecruitmentDetails({ id }: Props) {
     const [selectedCandidate, setSelectedCandidate] = useState<Candidate>(
         {} as Candidate,
     );
+
+    const nextCycle = () => {
+        getNextRecruitmentCycle(recruitmentId).then(
+            (data: RecruitmentDetailsType) => {
+                setRecruitmentId(data.id);
+                setDetails(data);
+            },
+        );
+    };
+
+    const previousCycle = () => {
+        getPreviousRecruitmentCycle(recruitmentId).then(
+            (data: RecruitmentDetailsType) => {
+                setRecruitmentId(data.id);
+                setDetails(data);
+            },
+        );
+    };
 
     useEffect(() => {
         getRecruitmentDetails(id).then(setDetails);
@@ -292,6 +315,28 @@ export default function RecruitmentDetails({ id }: Props) {
                 </ModalContent>
             </Modal>
             <NavBar />
+            <ArrowBackIcon
+                pos="absolute"
+                top="100"
+                left="100"
+                fontSize="40"
+                onClick={previousCycle}
+                _hover={{
+                    cursor: 'pointer',
+                    color: 'blue.500',
+                }}
+            />
+            <ArrowForwardIcon
+                pos="absolute"
+                top="100"
+                right="100"
+                fontSize="40"
+                onClick={nextCycle}
+                _hover={{
+                    cursor: 'pointer',
+                    color: 'blue.500',
+                }}
+            />
             {details && (
                 <Flex
                     alignItems="center"
