@@ -114,7 +114,7 @@ export default function RecruitmentList(): ReactElement {
                     {...getTableProps()}
                 >
                     <Thead>
-                        {headerGroups.map((group) => (
+                        {headerGroups.map((group, idx) => (
                             <Tr fontWeight="600">
                                 {group.headers.map((col) => (
                                     <Th

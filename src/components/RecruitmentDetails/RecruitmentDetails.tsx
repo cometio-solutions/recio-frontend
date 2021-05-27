@@ -45,6 +45,7 @@ import { Column, usePagination, useSortBy, useTable } from 'react-table';
 import { useEffect, useState } from 'react';
 
 import CandidateDetails from '../CandidateDetails/CandidateDetails';
+import CyclesSummary from '../CyclesSummary/CyclesSummary';
 import NavBar from '../utils/NavBar';
 import RecruitmentSummary from '../RecruitmentSummary/RecruitmentSummary';
 
@@ -260,6 +261,11 @@ interface Props {
 export default function RecruitmentDetails({ id }: Props) {
     const [details, setDetails] = useState<RecruitmentDetailsType>();
     const { isOpen, onOpen, onClose } = useDisclosure();
+    const {
+        isOpen: cyclesSummaryIsOpen,
+        onOpen: cyclesSummaryOnOpen,
+        onClose: cyclesSummaryOnClose,
+    } = useDisclosure();
     const [recruitmentId, setRecruitmentId] = useState<number>(id);
     const {
         isOpen: isCandidateDetailsOpen,
@@ -311,6 +317,24 @@ export default function RecruitmentDetails({ id }: Props) {
                     </ModalBody>
                     <ModalFooter>
                         <Button onClick={onClose}>Zamknij</Button>
+                    </ModalFooter>
+                </ModalContent>
+            </Modal>
+            <Modal
+                isOpen={cyclesSummaryIsOpen}
+                onClose={cyclesSummaryOnClose}
+                size="4xl"
+            >
+                <ModalOverlay />
+                <ModalContent>
+                    <ModalHeader>
+                        Podsumowanie wszystkich cyklów rekrutacji
+                    </ModalHeader>
+                    <ModalBody>
+                        <CyclesSummary id={id} />
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button onClick={cyclesSummaryOnClose}>Zamknij</Button>
                     </ModalFooter>
                 </ModalContent>
             </Modal>
@@ -393,7 +417,7 @@ export default function RecruitmentDetails({ id }: Props) {
                     </Flex>
                     <Flex direction="column" mr="8">
                         <Button onClick={onOpen}>Pokaż wykresy</Button>
-                        <Button mt="3" onClick={onOpen}>
+                        <Button mt="3" onClick={cyclesSummaryOnOpen}>
                             Podsumowanie wszystkich cykli
                         </Button>
                     </Flex>

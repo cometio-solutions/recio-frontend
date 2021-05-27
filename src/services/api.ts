@@ -21,6 +21,18 @@ export interface Recruitment {
     slot_limit: number;
 }
 
+export interface CyclesSummary {
+    cycles_number: number;
+    overall_candidates_num: number;
+    overall_qualified: number;
+    min_point_limit: number;
+    is_active: boolean;
+    faculty: string;
+    degree: string;
+    major_name: string;
+    major_mode: string;
+}
+
 export interface HistoryRecruitment {
     id: number;
     end_date: string;
@@ -356,7 +368,19 @@ export const getCandidateRecruitmentHistory = (
                 resolve(res.data.data);
             })
             .catch((err) => {
-                console.error(err);
+                reject(err.response.data.error);
+            }),
+    );
+};
+
+export const getCyclesSummary = (id: number): Promise<CyclesSummary> => {
+    return new Promise((resolve, reject) =>
+        axios
+            .get(API_URL + '/recruitment/' + id + '/summary', authConfig())
+            .then((res) => {
+                resolve(res.data);
+            })
+            .catch((err) => {
                 reject(err.response.data.error);
             }),
     );

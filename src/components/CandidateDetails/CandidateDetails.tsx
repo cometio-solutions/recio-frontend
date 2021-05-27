@@ -42,9 +42,11 @@ export default function CandidateDetails({
     >([]);
 
     useEffect(() => {
-        getCandidateRecruitmentHistory(candidate.pesel).then((data) =>
-            setRecruitmentHistory(data),
-        );
+        if (candidate.pesel) {
+            getCandidateRecruitmentHistory(candidate.pesel).then((data) =>
+                setRecruitmentHistory(data),
+            );
+        }
     }, [candidate]);
 
     return (
