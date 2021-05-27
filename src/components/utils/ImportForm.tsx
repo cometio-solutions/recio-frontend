@@ -8,6 +8,7 @@ import {
     Text,
 } from '@chakra-ui/react';
 import React, { FormEvent, useState } from 'react';
+
 import { importFile } from '../../services/api';
 
 export default function ImportForm() {
@@ -30,7 +31,14 @@ export default function ImportForm() {
     };
 
     return (
-        <Box mt="8" bg="white" p="4" boxShadow="md" borderRadius="md">
+        <Box
+            mt="8"
+            bg="white"
+            p="4"
+            boxShadow="md"
+            borderRadius="md"
+            backgroundColor="gray.50"
+        >
             <Heading size="md" mb="3">
                 Import plików
             </Heading>

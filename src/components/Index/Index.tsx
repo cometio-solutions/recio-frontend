@@ -1,6 +1,7 @@
 import { Container, Flex, Heading, Image } from '@chakra-ui/react';
-import React from 'react';
+
 import ImportForm from '../utils/ImportForm';
+import React from 'react';
 
 export default function Index() {
     const isEditor = sessionStorage.getItem('role') === 'editor';
@@ -10,7 +11,6 @@ export default function Index() {
             alignItems="center"
             maxW="container.lg"
             width="full"
-            bg="gray.100"
             my="6"
             borderRadius="md"
             height="full"

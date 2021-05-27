@@ -170,7 +170,7 @@ function DetailsTable({
                                 }}
                                 _hover={{
                                     cursor: 'pointer',
-                                    backgroundColor: 'grey',
+                                    backgroundColor: 'gray.400',
                                 }}
                             >
                                 {row.cells.map((cell) => (
@@ -391,7 +391,12 @@ export default function RecruitmentDetails({ id }: Props) {
                                 : '-'}
                         </Text>
                     </Flex>
-                    <Button onClick={onOpen}>Pokaż wykresy</Button>
+                    <Flex direction="column" mr="8">
+                        <Button onClick={onOpen}>Pokaż wykresy</Button>
+                        <Button mt="3" onClick={onOpen}>
+                            Podsumowanie wszystkich cykli
+                        </Button>
+                    </Flex>
                 </Flex>
             )}
             <Flex
