@@ -93,11 +93,15 @@ export default function RecruitmentSummary({
                                 value: 'Województwo',
                                 position: 'insideBottomRight',
                                 offset: 0,
-                                dy: 5
+                                dy: 5,
                             }}
                         />
                         <YAxis
-                            label={{ value: 'Ilość kandydatów', angle: -90, dx: -10 }}
+                            label={{
+                                value: 'Ilość kandydatów',
+                                angle: -90,
+                                dx: -10,
+                            }}
                         />
                         <Tooltip />
                         <Bar
@@ -128,10 +132,16 @@ export default function RecruitmentSummary({
                                     value: 'Numer cyklu',
                                     position: 'insideBottomRight',
                                     offset: 0,
-                                    dy: 5
+                                    dy: 5,
                                 }}
                             />
-                            <YAxis label={{ value: 'Ilość punktów', angle: -90, dx: -10 }}/>
+                            <YAxis
+                                label={{
+                                    value: 'Ilość punktów',
+                                    angle: -90,
+                                    dx: -10,
+                                }}
+                            />
                             <Tooltip />
                             <CartesianGrid stroke="#f5f5f5" />
                             <Line
@@ -160,11 +170,15 @@ export default function RecruitmentSummary({
                                 value: 'Ilość punktów',
                                 position: 'insideBottomRight',
                                 offset: 0,
-                                dy: 5
+                                dy: 5,
                             }}
                         />
                         <YAxis
-                            label={{ value: 'Ilość kandydatów', angle: -90, dx: -10 }}
+                            label={{
+                                value: 'Ilość kandydatów',
+                                angle: -90,
+                                dx: -10,
+                            }}
                         />
                         <Tooltip />
                         <CartesianGrid stroke="#f5f5f5" />
