@@ -16,7 +16,7 @@ import {
     getCandidatesPointsDistribution,
     getPointLimitForCycles,
 } from '../../../src/services/api';
-import { Flex, HStack, Heading, Stack } from '@chakra-ui/react';
+import { HStack, Heading, Stack } from '@chakra-ui/react';
 import React, { ReactElement, useEffect, useState } from 'react';
 
 interface RecruitmentDetailsProps {
@@ -46,6 +46,16 @@ export default function RecruitmentSummary({
     const [pointsDistribution, setPointsDistribution] = useState<
         CandidatesPoints[]
     >([]);
+
+    const hasRecruitmentCyclesPointLimit = (): boolean => {
+        for (const pointLimit of cyclesPointLimit) {
+            if (pointLimit.point_limit == null) {
+                return false;
+            }
+        }
+        return true;
+    };
+
     useEffect(() => {
         getPointLimitForCycles(id)
             .then((data) =>
@@ -79,34 +89,70 @@ export default function RecruitmentSummary({
                             name="test"
                             interval={0}
                             tick={{ fontSize: 10 }}
+                            label={{
+                                value: 'Województwo',
+                                position: 'insideBottomRight',
+                                offset: 0,
+                                dy: 5,
+                            }}
                         />
-                        <YAxis />
+                        <YAxis
+                            label={{
+                                value: 'Ilość kandydatów',
+                                angle: -90,
+                                dx: -10,
+                            }}
+                        />
                         <Tooltip />
-                        <Bar maxBarSize={50} dataKey="amount" fill="#8884d8" />
+                        <Bar
+                            maxBarSize={50}
+                            dataKey="amount"
+                            fill="#8884d8"
+                            name="Ilość kandydatów"
+                        />
                     </BarChart>
                 </Stack>
             </HStack>
             <HStack>
-                <Stack>
-                    <Heading textAlign="center" size="sm" mt="5">
-                        Próg punktowy w poszczególnych cyklach rekrutacji
-                    </Heading>
-                    <LineChart width={600} height={300} data={cyclesPointLimit}>
-                        <XAxis
-                            dataKey="cycle_number"
-                            interval={0}
-                            minTickGap={0}
-                        />
-                        <YAxis />
-                        <Tooltip />
-                        <CartesianGrid stroke="#f5f5f5" />
-                        <Line
-                            type="monotone"
-                            dataKey="point_limit"
-                            stroke="#ff7300"
-                        />
-                    </LineChart>
-                </Stack>
+                {hasRecruitmentCyclesPointLimit() && (
+                    <Stack>
+                        <Heading textAlign="center" size="sm" mt="5">
+                            Próg punktowy w poszczególnych cyklach rekrutacji
+                        </Heading>
+                        <LineChart
+                            width={600}
+                            height={300}
+                            data={cyclesPointLimit}
+                        >
+                            <XAxis
+                                dataKey="cycle_number"
+                                interval={0}
+                                minTickGap={0}
+                                label={{
+                                    value: 'Numer cyklu',
+                                    position: 'insideBottomRight',
+                                    offset: 0,
+                                    dy: 5,
+                                }}
+                            />
+                            <YAxis
+                                label={{
+                                    value: 'Ilość punktów',
+                                    angle: -90,
+                                    dx: -10,
+                                }}
+                            />
+                            <Tooltip />
+                            <CartesianGrid stroke="#f5f5f5" />
+                            <Line
+                                name="Ilość punktów"
+                                type="monotone"
+                                dataKey="point_limit"
+                                stroke="#ff7300"
+                            />
+                        </LineChart>
+                    </Stack>
+                )}
                 <Stack>
                     <Heading textAlign="center" size="sm" mt="5">
                         Rozkład punktów
@@ -116,11 +162,28 @@ export default function RecruitmentSummary({
                         height={300}
                         data={pointsDistribution}
                     >
-                        <XAxis dataKey="points" interval={5} minTickGap={0} />
-                        <YAxis />
+                        <XAxis
+                            dataKey="points"
+                            interval={5}
+                            minTickGap={0}
+                            label={{
+                                value: 'Ilość punktów',
+                                position: 'insideBottomRight',
+                                offset: 0,
+                                dy: 5,
+                            }}
+                        />
+                        <YAxis
+                            label={{
+                                value: 'Ilość kandydatów',
+                                angle: -90,
+                                dx: -10,
+                            }}
+                        />
                         <Tooltip />
                         <CartesianGrid stroke="#f5f5f5" />
                         <Line
+                            name="Ilość kandydatów"
                             type="monotone"
                             dataKey="numberOfStudents"
                             stroke="#ff7300"

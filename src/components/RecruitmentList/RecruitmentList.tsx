@@ -61,7 +61,13 @@ export default function RecruitmentList(): ReactElement {
             { Header: 'Wydział', accessor: 'faculty' },
             { Header: 'Stopień', accessor: 'degree' },
             { Header: 'Tryb', accessor: 'major_mode' },
-            { Header: 'Próg Punktowy', accessor: 'point_limit' },
+            {
+                Header: 'Próg Punktowy',
+                accessor: (originalRow) =>
+                    originalRow.point_limit === null
+                        ? '-'
+                        : originalRow.point_limit,
+            },
             { Header: 'Data Zakończenia', accessor: 'end_date' },
             { Header: 'Limit Miejsc', accessor: 'slot_limit' },
         ],
@@ -108,7 +114,7 @@ export default function RecruitmentList(): ReactElement {
                     {...getTableProps()}
                 >
                     <Thead>
-                        {headerGroups.map((group) => (
+                        {headerGroups.map((group, idx) => (
                             <Tr fontWeight="600">
                                 {group.headers.map((col) => (
                                     <Th
@@ -138,11 +144,11 @@ export default function RecruitmentList(): ReactElement {
                                 <Tr
                                     cursor="pointer"
                                     bg={
-                                        row.original.is_active ? 'gray.200' : ''
+                                        row.original.is_active ? 'gray.300' : ''
                                     }
                                     _hover={{
                                         cursor: 'pointer',
-                                        backgroundColor: 'grey',
+                                        backgroundColor: 'gray.400',
                                     }}
                                     onClick={handleRowClick(row.original.id)}
                                     {...row.getRowProps()}
