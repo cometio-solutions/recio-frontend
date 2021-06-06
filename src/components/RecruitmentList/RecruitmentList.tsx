@@ -68,7 +68,21 @@ export default function RecruitmentList(): ReactElement {
                         ? '-'
                         : originalRow.point_limit,
             },
-            { Header: 'Data Zakończenia', accessor: 'end_date' },
+            {
+                Header: 'Data Zakończenia',
+                accessor: 'end_date',
+                sortType: (a, b, id) => {
+                    const [am, ad, ay] = a.original.end_date
+                        .split(',')[0]
+                        .split('/');
+                    const [bm, bd, by] = b.original.end_date
+                        .split(',')[0]
+                        .split('/');
+                    return `${ay}/${am}/${ad}`.localeCompare(
+                        `${by}/${bm}/${bd}`,
+                    );
+                },
+            },
             { Header: 'Limit Miejsc', accessor: 'slot_limit' },
         ],
         [],
