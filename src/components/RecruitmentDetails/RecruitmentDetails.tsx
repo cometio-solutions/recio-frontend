@@ -301,6 +301,11 @@ export default function RecruitmentDetails({ id }: Props) {
     const paidIcon = <CheckIcon color="green" />;
     const unpaidIcon = <CloseIcon color="red" />;
 
+    const paidCount = details
+        ? details.candidates.filter((c) => c.is_paid).length
+        : 0;
+    const unpaidCount = details ? details.candidates.length - paidCount : 0;
+
     return (
         <Flex as="main" direction="column" minH="100vh" bg="gray.100">
             <CandidateDetails
@@ -313,7 +318,11 @@ export default function RecruitmentDetails({ id }: Props) {
                 <ModalContent>
                     <ModalHeader>Podsumowanie rekrutacji</ModalHeader>
                     <ModalBody>
-                        <RecruitmentSummary id={id} />
+                        <RecruitmentSummary
+                            id={id}
+                            paidCount={paidCount}
+                            unpaidCount={unpaidCount}
+                        />
                     </ModalBody>
                     <ModalFooter>
                         <Button onClick={onClose}>Zamknij</Button>
