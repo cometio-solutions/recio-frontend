@@ -135,13 +135,21 @@ export default function CandidateDetails({
                                     <Td>{recruitment.major_mode}</Td>
                                     <Td>{recruitment.end_date}</Td>
                                     <Td>
-                                        {Math.random() > 0.5 ? (
-                                            <Text as={'b'} color="green">
-                                                ZAKWALIFIKOWANY
+                                        {recruitment.status === 'W TRAKCIE' && (
+                                            <Text as={'b'} color="yellow.400">
+                                                {recruitment.status}
                                             </Text>
-                                        ) : (
+                                        )}
+                                        {recruitment.status ===
+                                            'ZAKWALIFIKOWANY' && (
+                                            <Text as={'b'} color="green">
+                                                {recruitment.status}
+                                            </Text>
+                                        )}
+                                        {recruitment.status ===
+                                            'NIE ZAKWALIFIKOWANY' && (
                                             <Text as={'b'} color="red">
-                                                NIEZAKWALIFIKOWANY
+                                                {recruitment.status}
                                             </Text>
                                         )}
                                     </Td>

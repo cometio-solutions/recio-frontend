@@ -42,6 +42,7 @@ export interface HistoryRecruitment {
     degree: string;
     major_name: string;
     major_mode: string;
+    status: string;
 }
 
 export interface Candidate {
