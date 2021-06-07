@@ -2,6 +2,7 @@ import {
     Bar,
     BarChart,
     CartesianGrid,
+    Cell,
     Line,
     LineChart,
     Tooltip,
@@ -16,11 +17,19 @@ import {
     getCandidatesPointsDistribution,
     getPointLimitForCycles,
 } from '../../../src/services/api';
-import { HStack, Heading, Stack } from '@chakra-ui/react';
+import {
+    HStack,
+    Heading,
+    Stack,
+    useTheme,
+    useColorModeValue,
+} from '@chakra-ui/react';
 import React, { ReactElement, useEffect, useState } from 'react';
 
 interface RecruitmentDetailsProps {
     id: number;
+    paidCount: number;
+    unpaidCount: number;
 }
 
 const getRandomData = (): any[] => {
@@ -38,6 +47,8 @@ const getRandomData = (): any[] => {
 
 export default function RecruitmentSummary({
     id,
+    paidCount,
+    unpaidCount,
 }: RecruitmentDetailsProps): ReactElement {
     const [cyclesPointLimit, setCyclesPointLimit] = useState<PointLimit[]>([]);
     const [candidateOrigin, setCandidateOrigin] = useState<CandidatesOrigin[]>(
@@ -69,6 +80,13 @@ export default function RecruitmentSummary({
             setPointsDistribution(data.sort((a, b) => a.points - b.points)),
         );
     }, []);
+
+    const paymentData = [
+        { status: 'Zapłacony', amount: paidCount },
+        { status: 'Niezapłacony', amount: unpaidCount },
+    ];
+    const paymentColors = ['#38A169', '#E53E3E'];
+
     return (
         <Stack spacing={3} align="center">
             <HStack>
@@ -189,6 +207,41 @@ export default function RecruitmentSummary({
                             stroke="#ff7300"
                         />
                     </LineChart>
+                </Stack>
+            </HStack>
+            <HStack>
+                <Stack>
+                    <Heading textAlign="center" size="sm" mt="5">
+                        Dokonane płatności rekrutacyjne
+                    </Heading>
+                    <BarChart width={800} height={300} data={paymentData}>
+                        <CartesianGrid strokeDasharray="10 10"></CartesianGrid>
+                        <XAxis
+                            dataKey="status"
+                            label={{
+                                value: 'Status płatności',
+                                position: 'center',
+                                offset: 0,
+                                dy: 10,
+                            }}
+                        />
+                        <YAxis
+                            label={{
+                                value: 'Ilość kandydatów',
+                                angle: -90,
+                                dx: -10,
+                            }}
+                        />
+                        <Tooltip />
+                        <Bar dataKey="amount" name="Ilość kandydatów">
+                            {paymentData.map((entry, index) => (
+                                <Cell
+                                    key={`cell-${index}`}
+                                    fill={paymentColors[index]}
+                                />
+                            ))}
+                        </Bar>
+                    </BarChart>
                 </Stack>
             </HStack>
         </Stack>
