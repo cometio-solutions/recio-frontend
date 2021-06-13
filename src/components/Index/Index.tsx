@@ -1,7 +1,7 @@
-import { Container, Flex, Heading, Image } from '@chakra-ui/react';
-
-import ImportForm from '../utils/ImportForm';
+import { Button, Container, Flex, Heading, Image } from '@chakra-ui/react';
 import React from 'react';
+import ImportForm from '../utils/ImportForm';
+import { openPlotReport } from '../../services/api';
 
 export default function Index() {
     const isEditor = sessionStorage.getItem('role') === 'editor';

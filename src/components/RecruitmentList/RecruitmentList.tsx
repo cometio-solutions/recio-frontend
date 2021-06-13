@@ -18,14 +18,94 @@ import {
     chakra,
 } from '@chakra-ui/react';
 import { Column, usePagination, useSortBy, useTable } from 'react-table';
-import React, { ReactElement, useEffect, useState } from 'react';
-import { Recruitment, getRecruitment } from '../../services/api';
+import React, { ChangeEvent, ReactElement, useEffect, useState } from 'react';
+import {
+    Recruitment,
+    getRecruitment,
+    openPlotReport,
+    openYearReport,
+} from '../../services/api';
 import { TriangleDownIcon, TriangleUpIcon } from '@chakra-ui/icons';
 
 import Filter from './Filter';
 import { Flex } from '@chakra-ui/react';
 import NavBar from '../utils/NavBar';
 import { useHistory } from 'react-router';
+
+function ReportButtons({ list }: { list: Recruitment[] }) {
+    const [isPlotsLoading, setPlotsLoading] = useState(false);
+    const [isYearLoading, setYearLoading] = useState(false);
+    const [selectedYear, setSelectedYear] = useState<number | undefined>();
+
+    const availableYears = Array.from(
+        new Set(list.map((x) => +x.end_date.split(',')[0].split('/')[2])),
+    ).sort();
+
+    const handlePlotsClick = () => {
+        setPlotsLoading(true);
+        openPlotReport().then(() => setPlotsLoading(false));
+    };
+
+    const handleYearClick = () => {
+        if (selectedYear) {
+            setYearLoading(true);
+            openYearReport(selectedYear).then(() => setYearLoading(false));
+        }
+    };
+
+    const handleYearChange = (e: ChangeEvent<HTMLSelectElement>) => {
+        const value = e.target.value;
+        if (value == '') setSelectedYear(undefined);
+        else setSelectedYear(+value);
+    };
+
+    return (
+        <HStack
+            mt="5"
+            mx="5"
+            p="4"
+            borderRadius="xl"
+            background="white"
+            justifyContent="space-between"
+            width="max-content"
+            spacing="14"
+            alignSelf="center"
+        >
+            <HStack>
+                <Text>Raport dla wszystkich rekrutacji:</Text>
+                <Button
+                    disabled={isPlotsLoading}
+                    isLoading={isPlotsLoading}
+                    onClick={handlePlotsClick}
+                >
+                    Wygeneruj raport
+                </Button>
+            </HStack>
+            <HStack>
+                <Text flexShrink={0}>Raport dla wybranego roku:</Text>
+                <Select
+                    placeholder="Wybrany rok"
+                    onChange={handleYearChange}
+                    maxW="sm"
+                >
+                    {availableYears.map((year) => (
+                        <option key={year} value={year}>
+                            {year}
+                        </option>
+                    ))}
+                </Select>
+                <Button
+                    flexShrink={0}
+                    disabled={isYearLoading || !selectedYear}
+                    isLoading={isYearLoading}
+                    onClick={handleYearClick}
+                >
+                    Wygeneruj raport
+                </Button>
+            </HStack>
+        </HStack>
+    );
+}
 
 export default function RecruitmentList(): ReactElement {
     const [recruitmentList, setRecruitmentList] = useState<Recruitment[]>([]);
@@ -107,6 +187,7 @@ export default function RecruitmentList(): ReactElement {
     return (
         <Flex as="main" direction="column" minH="100vh" bg="gray.100">
             <NavBar />
+            <ReportButtons list={recruitmentList} />
             <Filter
                 setList={setFilteredRecruitmentList}
                 list={recruitmentList}

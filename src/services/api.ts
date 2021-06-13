@@ -116,6 +116,13 @@ function authConfig() {
     };
 }
 
+function pdfConfig() {
+    const config = authConfig() as any;
+    config.headers.accept = 'application/pdf';
+    config['responseType'] = 'arraybuffer';
+    return config;
+}
+
 export const login = (email: string, password: string): Promise<UserData> => {
     return new Promise((resolve, reject) => {
         axios
@@ -386,3 +393,35 @@ export const getCyclesSummary = (id: number): Promise<CyclesSummary> => {
             }),
     );
 };
+
+export const openPlotReport = (): Promise<boolean> => {
+    return axios
+        .get(API_URL + '/report/plots', pdfConfig())
+        .then((res) => {
+            openPDF(res.data);
+            return true;
+        })
+        .catch((err) => {
+            console.error(err);
+            return true;
+        });
+};
+
+export const openYearReport = (year: number): Promise<boolean> => {
+    return axios
+        .get(API_URL + `/report/` + year, pdfConfig())
+        .then((res) => {
+            openPDF(res.data);
+            return true;
+        })
+        .catch((err) => {
+            console.error(err);
+            return true;
+        });
+};
+
+function openPDF(data: string) {
+    const blob = new Blob([data], { type: 'application/pdf;base64' });
+    const fileURL = URL.createObjectURL(blob);
+    window.open(fileURL);
+}
